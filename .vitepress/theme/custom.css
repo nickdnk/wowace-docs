@@ -1,0 +1,154 @@
+/**
+ * Ace3 docs — "WoW gold on dark" brand.
+ * Overrides VitePress default-theme CSS variables.
+ * Light mode uses a darker, readable gold (contrast on white);
+ * dark mode uses bright WoW gold (#FFD100).
+ */
+
+:root {
+  /* Brand — readable gold for light backgrounds.
+     brand-1 is the default (darker, legible) link colour; brand-2 is the
+     hover colour and must be a clearly brighter, more saturated gold so the
+     hover state actually reads as a colour change on the parchment bg. */
+  --vp-c-brand-1: #876a00;
+  --vp-c-brand-2: #bf8c00;
+  --vp-c-brand-3: #c79b1a;
+  --vp-c-brand-soft: rgba(199, 155, 26, 0.16);
+
+  /* Solid brand buttons: dark text on gold */
+  --vp-button-brand-bg: var(--vp-c-brand-3);
+  --vp-button-brand-hover-bg: #d9ab14;
+  --vp-button-brand-active-bg: #b98f10;
+  --vp-button-brand-text: #1a1a1d;
+  --vp-button-brand-hover-text: #1a1a1d;
+  --vp-button-brand-active-text: #1a1a1d;
+  --vp-button-brand-border: transparent;
+}
+
+/* LIGHT MODE ONLY. These surface/border/text overrides are scoped to
+   `:not(.dark)` because `.dark` does not re-declare them — if they lived in
+   plain `:root` they would leak into dark mode (light text + light borders on
+   the dark bg) and break it. */
+:root:not(.dark) {
+  /* Soft, warm "parchment" surfaces instead of harsh pure white, so light
+     mode is easier on the eyes and pairs with the gold brand. */
+  --vp-c-bg: #f5f3ee;
+  --vp-c-bg-alt: #ebe7df;
+  --vp-c-bg-soft: #efece4;
+  --vp-c-bg-elv: #faf8f4;
+
+  /* Slightly warm, lower-contrast borders/dividers to cut glare. */
+  --vp-c-border: #ded9cc;
+  --vp-c-divider: #e6e1d6;
+  --vp-c-gutter: #e2ddd0;
+
+  /* Code blocks: a touch deeper than the page so they read as panels. */
+  --vp-code-block-bg: #f0ede5;
+
+  /* Warm the text a hair to match the background temperature. */
+  --vp-c-text-1: #2b2924;
+  --vp-c-text-2: #5b564d;
+}
+
+.dark {
+  /* Brand — bright WoW gold for dark backgrounds */
+  --vp-c-brand-1: #ffd100;
+  --vp-c-brand-2: #ffdb33;
+  --vp-c-brand-3: #e0b800;
+  --vp-c-brand-soft: rgba(255, 209, 0, 0.16);
+
+  /* Dark slate surfaces — game-launcher feel */
+  --vp-c-bg: #0e0e10;
+  --vp-c-bg-alt: #161618;
+  --vp-c-bg-elv: #18181b;
+  --vp-c-bg-soft: #18181b;
+
+  /* Solid brand buttons: dark text on gold */
+  --vp-button-brand-bg: var(--vp-c-brand-1);
+  --vp-button-brand-hover-bg: #ffdb33;
+  --vp-button-brand-active-bg: #e0b800;
+  --vp-button-brand-text: #0e0e10;
+  --vp-button-brand-hover-text: #0e0e10;
+  --vp-button-brand-active-text: #0e0e10;
+}
+
+/* Home hero — gold gradient title + subtle gold glow.
+   Light mode uses a deeper gold→amber so the title stays legible on the
+   parchment background; dark mode keeps the bright WoW-gold glow. */
+:root {
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(120deg, #b8860b 30%, #a85d00);
+  --vp-home-hero-image-background-image: linear-gradient(
+    -45deg,
+    rgba(199, 155, 26, 0.3),
+    rgba(168, 93, 0, 0.18)
+  );
+  --vp-home-hero-image-filter: blur(48px);
+}
+
+.dark {
+  --vp-home-hero-name-background: linear-gradient(120deg, #ffd100 30%, #ff9d00);
+  --vp-home-hero-image-background-image: linear-gradient(
+    -45deg,
+    rgba(255, 209, 0, 0.35),
+    rgba(255, 157, 0, 0.2)
+  );
+}
+
+/**
+ * API reference headings that sit directly before an <ApiMethod> card are
+ * kept for the anchor + "On this page" outline, but visually hidden (the card
+ * already shows the signature). Visually-hidden — NOT display:none — so the
+ * element keeps a layout box and anchor-scroll still lands on it.
+ */
+.vp-doc h3:has(+ .api-method) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/**
+ * The logo is black artwork on transparency — fine on a light background, but
+ * invisible on the dark UI. Color-invert it (to white) in dark mode only.
+ */
+html.dark .VPNavBarTitle .logo {
+  filter: invert(1);
+}
+
+/* "embeddable" chip: authored as a standalone element on the line below the
+   page title (a sibling of the heading, never inside it) so it can't trigger
+   the heading's anchor-hover. Sits snug under the title. */
+.vp-doc .embeddable {
+  display: inline-block;
+  margin: 8px 0 12px;
+}
+
+/* Sidebar link hover: VitePress's default grey→darker-grey is barely visible on
+   the light parchment, so tint the hovered row with gold text plus a faint gold
+   background pill. The `#app` id beats VitePress's scoped-style specificity; the
+   inset margin/padding extends the pill without shifting the text. brand-soft and
+   brand-1 are gold in both light and dark mode. */
+#app .VPSidebar .VPSidebarItem.is-link > .item > .link {
+  margin: 0 -8px;
+  padding: 0 8px;
+  border-radius: 6px;
+}
+#app .VPSidebar .VPSidebarItem.is-link > .item > .link:hover {
+  background-color: var(--vp-c-brand-soft);
+}
+#app .VPSidebar .VPSidebarItem.is-link > .item > .link:hover .text {
+  color: var(--vp-c-brand-1);
+}
+
+/* Wrap Lua code blocks instead of scrolling them horizontally. */
+.vp-doc div[class*='language-lua'] pre,
+.vp-doc div[class*='language-lua'] code {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
