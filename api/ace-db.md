@@ -10,32 +10,6 @@ Creating a new Database using the [`:New`](#new) function will return a new `DBO
 
 If you create a new namespaced child-database ([`:RegisterNamespace`](#registernamespace)), you'll get a `DBObject` as well, but note that the child-databases cannot individually change their profile, and are linked to their parents profile - and because of that, the profile related APIs are not available. Only [`:RegisterDefaults`](#registerdefaults) and [`:ResetProfile`](#resetprofile) are available on child-databases.
 
-## Scopes
-
-Data can be saved in different scopes, depending on its intended usage. The most common scope is `profile`, which allows the user to choose the active profile, and manage the profiles of all of their characters. The following scopes are available:
-
-- `char`: Character-specific data. Every character has its own database.
-- `realm`: Realm-specific data. All of the players characters on the same realm share this database.
-- `class`: Class-specific data. All of the players characters of the same class share this database.
-- `race`: Race-specific data. All of the players characters of the same race share this database.
-- `faction`: Faction-specific data. All of the players characters of the same faction share this database.
-- `factionrealm`: Faction and realm specific data. All of the players characters on the same realm and of the same faction share this database.
-- `locale`: Locale specific data, based on the locale of the players game client.
-- `global`: Global Data. All characters on the same account share this database.
-- `profile`: Profile-specific data. All characters using the same profile share this database. The user can control which profile should be used.
-
-Each of these is a **live view into the saved table for the relevant key**. You read and write them like ordinary Lua tables and AceDB persists the correct slice automatically.
-
-Profiles work a little differently, because the user can switch which one is active:
-
-- **`db.profile`** is the table of the **currently active profile**: the one whose name [`:GetCurrentProfile`](#getcurrentprofile) returns. This is what your addon reads and writes for ordinary settings (`db.profile.fontSize = 12`).
-- Which profile is active is tracked **per character**: AceDB keeps a `character → profile name` map in the SavedVariables, so every character remembers its own choice. A character with no stored choice falls back to the default profile: the `defaultProfile` you passed to [`:New`](#new) (`"Default"` if you passed `true`), or a character-specific profile if you passed nothing.
-- **`db.profiles`** is the table of **all** profiles, keyed by profile name (every profile that exists in the database, shared across the account). [`:GetProfiles`](#getprofiles) lists their names; [`:SetProfile`](#setprofile) switches the active one (creating it if the name is new), which re-points `db.profile` at that profile's table and stores the choice for the current character. [`:CopyProfile`](#copyprofile), [`:DeleteProfile`](#deleteprofile) and [`:ResetProfile`](#resetprofile) manage them. Changing the profile fires the [profile callbacks](#callbacks) so your addon can re-apply settings.
-
-So in a typical addon, `self.db.profile` is "the user's current settings", `self.db.profiles` is "every saved settings set", and the active selection is remembered separately for each character.
-
-For more details on how to use AceDB-3.0, see the [Tutorial](#tutorial) below.
-
 ## Tutorial
 
 This walk-through covers the core concepts (profiles, smart defaults and namespaces) with examples. For exact method signatures and parameters, follow the links into the [API reference](#api-reference) below.
@@ -64,7 +38,7 @@ end
 
 ### Accessing & Storing Data
 
-A database object exposes its data through several scopes (see [Scopes](#scopes) above). The most commonly used is `profile`, which lets each character choose which named profile is active.
+A database object exposes its data through several scopes (see [Scopes](#scopes) below). The most commonly used is `profile`, which lets each character choose which named profile is active.
 
 Reading and writing is just plain table access; you can store strings, numbers, or whole nested tables:
 
@@ -164,7 +138,7 @@ Three callbacks all signal "the active profile changed": the user switched profi
 
 ```lua
 function MyAddon:OnInitialize()
-    self.db = LibStub("AceDB-3.0"):New("MyAddonDB", defaults)
+    self.db = LibStub("AceDB-3.0"):New("MyAddonDB")
     self.db.RegisterCallback(self, "OnProfileChanged", "RefreshConfig")
     self.db.RegisterCallback(self, "OnProfileCopied", "RefreshConfig")
     self.db.RegisterCallback(self, "OnProfileReset", "RefreshConfig")
@@ -180,6 +154,30 @@ Every addon that uses profiles should handle these three callbacks for a smooth,
 :::
 
 For the complete list of callbacks and their arguments, see the [Callbacks](#callbacks) section below.
+
+## Scopes
+
+Data can be saved in different scopes, depending on its intended usage. The following scopes are available:
+
+- `char`: Character-specific data. Every character has its own database.
+- `realm`: Realm-specific data. All of the players characters on the same realm share this database.
+- `class`: Class-specific data. All of the players characters of the same class share this database.
+- `race`: Race-specific data. All of the players characters of the same race share this database.
+- `faction`: Faction-specific data. All of the players characters of the same faction share this database.
+- `factionrealm`: Faction and realm specific data. All of the players characters on the same realm and of the same faction share this database.
+- `locale`: Locale specific data, based on the locale of the players game client.
+- `global`: Global Data. All characters on the same account share this database.
+- `profile`: Profile-specific data, and the most commonly used scope. All characters using the same profile share this database; the user can choose the active profile and manage the profiles of all of their characters.
+
+Each of these is a **live view into the saved table for the relevant key**. You read and write them like ordinary Lua tables and AceDB persists the correct slice automatically.
+
+Profiles work a little differently, because the user can switch which one is active:
+
+- **`db.profile`** is the table of the **currently active profile**: the one whose name [`:GetCurrentProfile`](#getcurrentprofile) returns. This is what your addon reads and writes for ordinary settings (`db.profile.fontSize = 12`).
+- Which profile is active is tracked **per character**: AceDB keeps a `character → profile name` map in the SavedVariables, so every character remembers its own choice. A character with no stored choice falls back to the default profile: the `defaultProfile` you passed to [`:New`](#new) (`"Default"` if you passed `true`), or a character-specific profile if you passed nothing.
+- **`db.profiles`** is the table of **all** profiles, keyed by profile name (every profile that exists in the database, shared across the account). [`:GetProfiles`](#getprofiles) lists their names; [`:SetProfile`](#setprofile) switches the active one (creating it if the name is new), which re-points `db.profile` at that profile's table and stores the choice for the current character. [`:CopyProfile`](#copyprofile), [`:DeleteProfile`](#deleteprofile) and [`:ResetProfile`](#resetprofile) manage them. Changing the profile fires the [profile callbacks](#callbacks) so your addon can re-apply settings.
+
+So in a typical addon, `self.db.profile` is "the user's current settings", `self.db.profiles` is "every saved settings set", and the active selection is remembered separately for each character.
 
 ## API Reference
 
@@ -204,7 +202,9 @@ Note that there is no token replacement in the default profile name, passing a d
 ```lua
 -- Create an empty DB using a character-specific default profile.
 self.db = LibStub("AceDB-3.0"):New("MyAddonDB")
--- Create a DB using defaults and using a shared default profile
+
+-- ...or with a defaults table and a shared "Default" profile:
+local defaults = { profile = { enabled = true } }
 self.db = LibStub("AceDB-3.0"):New("MyAddonDB", defaults, true)
 ```
 ````

@@ -42,8 +42,10 @@
   --vp-c-divider: #e6e1d6;
   --vp-c-gutter: #e2ddd0;
 
-  /* Code blocks: a touch deeper than the page so they read as panels. */
-  --vp-code-block-bg: #f0ede5;
+  /* Code blocks: a deeper shade of the SAME parchment hue (not warmer), so they
+     read as a distinct panel against the page and the API cards without drifting
+     toward the amber used by warning blocks. */
+  --vp-code-block-bg: #e6e4df;
 
   /* Warm the text a hair to match the background temperature. */
   --vp-c-text-1: #2b2924;

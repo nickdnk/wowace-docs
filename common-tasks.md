@@ -12,7 +12,7 @@ Use [AceAddon-3.0](/api/ace-addon). It gives your addon an object with a clean l
 
 ## How do I save settings between sessions?
 
-Use [AceDB-3.0](/api/ace-db). It wraps your `SavedVariables` with [scopes](/api/ace-db#scopes) (per-character, per-realm, account-wide, and more) and per-character [profiles](/api/ace-db#how-the-scopes-work), plus smart [defaults](/api/ace-db#defaults) that are never written to disk.
+Use [AceDB-3.0](/api/ace-db). It wraps your `SavedVariables` with [scopes](/api/ace-db#scopes) (per-character, per-realm, account-wide, and more), plus smart [defaults](/api/ace-db#defaults) that are never written to disk.
 
 ## How do I let users switch, copy and reset profiles?
 
