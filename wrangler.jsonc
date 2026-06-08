@@ -1,0 +1,13 @@
+{
+  // Cloudflare Workers (Static Assets) deploy config for the built VitePress site.
+  // The site lives at the repo root, so `vitepress build` outputs to
+  // .vitepress/dist (NOT docs/.vitepress/dist).
+  //
+  // `name` must match the Worker name in your Cloudflare project — change it if
+  // your Worker is named differently.
+  "name": "wowace-docs",
+  "compatibility_date": "2025-06-01",
+  "assets": {
+    "directory": ".vitepress/dist"
+  }
+}

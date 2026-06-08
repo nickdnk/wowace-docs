@@ -1,5 +1,5 @@
 {
-  "name": "ace3guidocs",
+  "name": "wowace-docs",
   "type": "module",
   "dependencies": {
     "vitepress": "^1.6.4"

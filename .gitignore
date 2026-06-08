@@ -5,6 +5,9 @@ node_modules/
 .vitepress/cache/
 .vitepress/dist/
 
+# Cloudflare Wrangler
+.wrangler/
+
 # logs
 *.log
 npm-debug.log*
