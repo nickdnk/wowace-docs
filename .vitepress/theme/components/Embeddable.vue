@@ -8,7 +8,7 @@ const href = withBase('/api/ace-addon#creating-an-addon-object')
     <span class="embeddable__chip" tabindex="0" role="note" aria-describedby="embeddable-tip">embeddable</span>
     <span id="embeddable-tip" class="embeddable__pop" role="tooltip">
       This library can be <strong>embedded</strong> into your addon as a mixin; list it when you
-      create the addon and its methods become available directly on your addon object (called via <code>self</code>).
+      create the addon and its methods become available directly on your addon object (via <code>self</code>).<br>
       <a :href="href">Creating an addon object →</a>
     </span>
   </span>
@@ -56,12 +56,27 @@ const href = withBase('/api/ace-addon#creating-an-addon-object')
   visibility: hidden;
   transform: translateY(-4px);
   transition: opacity 0.15s, transform 0.15s, visibility 0.15s;
+  /* Delay the close so moving the cursor from the chip onto the popover (across
+     the gap below the chip) doesn't dismiss it before it's reached. */
+  transition-delay: 0.25s;
+}
+/* Invisible bridge spanning the gap between the chip and the popover, so the
+   hover region stays continuous and the cursor never leaves `.embeddable`. */
+.embeddable__pop::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  left: 0;
+  right: 0;
+  height: 8px;
 }
 .embeddable:hover .embeddable__pop,
 .embeddable:focus-within .embeddable__pop {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  /* Open immediately; only the close is delayed. */
+  transition-delay: 0s;
 }
 .embeddable__pop a {
   display: inline-block;
