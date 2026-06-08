@@ -9,15 +9,9 @@ built on **Ace3**, and explains the pieces as it goes.
 
 ## What is Ace3, and why use it?
 
-Ace3 is the most widely used **addon framework** for World of Warcraft: a collection of small, focused libraries that
-handle the repetitive, fiddly parts of addon development so you can concentrate on what your addon actually does. It
-isn't one big monolithic library; each piece solves a single problem (saving settings, reacting to game events, building
-a configuration screen, drawing UI, scheduling timers) and you **embed only the ones you need**. Mix and match; ignore
-the rest.
-
-Every addon author runs into the same chores: persisting `SavedVariables` across sessions and characters, wiring up and
-cleaning up event handlers, building an options panel, safely hooking Blizzard functions. Ace3 provides proven solutions
-for all of them, shared by thousands of addons:
+Ace3 is the most widely used **addon framework** for World of Warcraft: a set of small, focused libraries that handle
+the repetitive parts of addon development so you can focus on what your addon does. It isn't one monolithic library; you
+**embed only the pieces you need** and ignore the rest. What that buys you:
 
 - **Less boilerplate**: a clean addon lifecycle (`OnInitialize` / `OnEnable` / `OnDisable`) instead of hand-wiring
   [`ADDON_LOADED`](https://warcraft.wiki.gg/wiki/ADDON_LOADED).
@@ -25,38 +19,30 @@ for all of them, shared by thousands of addons:
   defaults.
 - **Configuration for free**: describe your options once and [AceConfig-3.0](/api/ace-config) builds both a settings GUI
   *and* slash commands from it.
-- **Automatic cleanup**: events, hooks and timers registered through Ace are torn down for you when your addon is
-  disabled.
+- **Event handling**: [AceEvent-3.0](/api/ace-event) registers and dispatches game events and inter-addon messages, with
+  throttling for bursty events via [AceBucket-3.0](/api/ace-bucket).
+- **Leak-free custom UI**: [AceGUI-3.0](/acegui/) builds windows from a pool of recycled widgets, so rebuilding your
+  interface never leaks frames for the session.
+- **Addon communication**: [AceComm-3.0](/api/ace-comm) sends messages of any length to other copies of your addon
+  across the group or guild.
+- **…and more**: timers ([AceTimer-3.0](/api/ace-timer)), data serialization ([AceSerializer-3.0](/api/ace-serializer)),
+  localization ([AceLocale-3.0](/api/ace-locale)), safe function hooks ([AceHook-3.0](/api/ace-hook)) and other
+  utilities.
 
-If you're writing anything more than a throwaway script, Ace3 saves a lot of time and a lot of bugs. The rest of this
-page walks through setting up an addon and points you at the library you need for each task.
+The rest of this page walks through setting up an addon and points you at the library for each task.
 
 ## Download
 
 Get the latest Ace3 release:
 
-[**Download Ace3 (latest)**](https://www.wowace.com/projects/ace3/files/latest)
+<a class="download-btn" href="https://www.wowace.com/projects/ace3/files/latest">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+  Download Ace3
+</a>
 
 Ace3 is a bundle of libraries you **embed inside your own addon**; there's no separate install for players. Unzip the
 libraries you need into a `Libs/` subdirectory of your addon folder and reference them from your `.toc` or
 `embeds.xml` (see [load order](#basic-addon-file-setup) below). You only need to ship the libraries you actually use.
-
-### How libraries are loaded: LibStub
-
-Every Ace3 library is registered with **`LibStub`**, a tiny shared version-control stub that all the major WoW libraries
-use. Instead of creating a global for each library, you ask `LibStub` for it by name and major version:
-
-```lua
-local AceAddon = LibStub("AceAddon-3.0")
-local AceGUI   = LibStub("AceGUI-3.0")
-```
-
-`LibStub("Name-X.0")` returns the single shared instance of that library: the same object for every addon on the client,
-so multiple addons embedding the same library share one copy. Passing a second argument (`LibStub("Name", true)`) makes
-the lookup *silent*, returning `nil` instead of erroring if the library isn't loaded.
-
-Because every Ace3 call starts with a `LibStub` lookup, **`LibStub` itself must be loaded before any library that
-registers with it** (see load order below). You will see the `LibStub("...")` pattern throughout these docs.
 
 ## Basic Addon File Setup
 
@@ -114,8 +100,8 @@ the [TOC format reference](https://warcraft.wiki.gg/wiki/TOC_format).
 ### Loading the libraries
 
 After the metadata, the `.toc` lists the files to load, top to bottom. There are **two equivalent ways** to pull in the
-Ace3 libraries; pick one. With the **direct** approach the library files are listed in the `.toc` itself; with the *
-*embeds.xml** approach that list moves to a separate file (the `embeds.xml` tab below), keeping your own code visually
+Ace3 libraries; pick one. With the **direct** approach the library files are listed in the `.toc` itself; with the
+**embeds.xml** approach that list moves to a separate file (the `embeds.xml` tab below), keeping your own code visually
 separate. Either way, `LibStub` loads first.
 
 ::: code-group
@@ -160,10 +146,11 @@ The **embeds.xml** tab pairs with the **with embeds.xml** `.toc`: that `.toc` lo
 WoW loads the files **in the exact order they are listed** in the `.toc` (and `embeds.xml`), top to bottom. A file can
 only use code that was already loaded above it, so order dependencies correctly:
 
-1. **`LibStub`** first; everything else registers with it.
-2. **Libraries** next (via `embeds.xml`), before any of your code that calls `LibStub(...)` for them.
+1. **`LibStub`** first: the shared version stub every Ace library registers with, and that you call as
+   `LibStub("AceX-3.0")` to fetch one.
+2. **Libraries** next, before any of your code that calls `LibStub(...)` for them.
 3. **Locale files** ([AceLocale](/api/ace-locale)) before the code that reads the translations.
-4. **Your main code** (`Core.lua`) last, once its dependencies exist.
+4. **Your main code** (e.g. `Core.lua`) last, once its dependencies exist.
 
 Getting this wrong gives `nil`/"attempt to index" errors at load because a library or value isn't available yet.
 :::
@@ -301,7 +288,7 @@ opens the window.
 Each library is independent; embed only what you need. Every page has a **Usage** guide (purpose + examples) followed by
 its full API reference.
 
-**Addon structure**
+**Addon Structure**
 
 - [AceAddon-3.0](/api/ace-addon): addon object with `OnInitialize`/`OnEnable`/`OnDisable` lifecycle and modules.
 - [AceConsole-3.0](/api/ace-console): chat output and slash commands.
@@ -310,7 +297,7 @@ its full API reference.
 - [AceHook-3.0](/api/ace-hook): safely hook functions and frame scripts.
 - [AceTimer-3.0](/api/ace-timer): one-shot and repeating timers.
 
-**Saved variables**
+**Persisting Data**
 
 - [AceDB-3.0](/api/ace-db): `SavedVariables` with profiles, smart defaults and namespaces.
 - [AceDBOptions-3.0](/api/ace-db-options): a ready-made profile-management options table.
@@ -323,13 +310,14 @@ its full API reference.
 - [AceConfigRegistry-3.0](/api/ace-config-registry): central options-table registry and change notifications.
 - [Options Tables](/api/ace-config-options): the options-table format reference.
 
-**Communication & data**
+**Communication & Data**
 
 - [AceComm-3.0](/api/ace-comm): send addon messages of any length between clients.
 - [AceSerializer-3.0](/api/ace-serializer): encode values to a string for transport or storage.
 - [AceLocale-3.0](/api/ace-locale): localization with fallback to a base locale.
 - [AceTab-3.0](/api/ace-tab): tab-completion for chat input.
+- [CallbackHandler-1.0](/api/callback-handler): the callback/message dispatch engine the other libraries build on.
 
-**GUI**
+**Design & Presentation**
 
 - [AceGUI-3.0](/acegui/): a pooled widget toolkit for building custom GUIs.

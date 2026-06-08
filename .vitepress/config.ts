@@ -225,8 +225,8 @@ export default defineConfig({
   sitemap: { hostname: SITE_URL },
   head: [
     ['link', { rel: 'icon', type: 'image/png', href: '/logo.png' }],
-    // WoW gold, colours the mobile browser chrome / address bar.
-    ['meta', { name: 'theme-color', content: '#ffd100' }],
+    // Brand blue, colours the mobile browser chrome / address bar.
+    ['meta', { name: 'theme-color', content: '#4a90d9' }],
     ['meta', { property: 'og:type', content: 'website' }],
     ['meta', { property: 'og:site_name', content: 'Ace3 Documentation' }],
     ['meta', { property: 'og:image', content: `${SITE_URL}/logo.png` }],
@@ -310,7 +310,6 @@ export default defineConfig({
   },
 
   markdown: {
-    // WoW gold-on-dark vibe pairs with a dark code theme.
     theme: { light: 'github-light', dark: 'one-dark-pro' },
     // WoW .toc files aren't a Shiki language; render them as ini
     // (highlights the `##` directive lines as comments) to avoid the
