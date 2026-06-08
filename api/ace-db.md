@@ -6,6 +6,12 @@ description: "AceDB-3.0 manages your addon's SavedVariables with profiles, smart
 
 AceDB-3.0 manages the `SavedVariables` of your addon. It offers profile management, smart defaults and namespaces for modules.
 
+Creating a new Database using the [`:New`](#new) function will return a new `DBObject`. A database will inherit all functions of the `DBObjectLib` listed here.
+
+If you create a new namespaced child-database ([`:RegisterNamespace`](#registernamespace)), you'll get a `DBObject` as well, but note that the child-databases cannot individually change their profile, and are linked to their parents profile - and because of that, the profile related APIs are not available. Only [`:RegisterDefaults`](#registerdefaults) and [`:ResetProfile`](#resetprofile) are available on child-databases.
+
+## Scopes
+
 Data can be saved in different scopes, depending on its intended usage. The most common scope is `profile`, which allows the user to choose the active profile, and manage the profiles of all of their characters. The following scopes are available:
 
 - `char`: Character-specific data. Every character has its own database.
@@ -18,9 +24,7 @@ Data can be saved in different scopes, depending on its intended usage. The most
 - `global`: Global Data. All characters on the same account share this database.
 - `profile`: Profile-specific data. All characters using the same profile share this database. The user can control which profile should be used.
 
-### How the scopes work
-
-Each of these is a field on the database object (`db.char`, `db.realm`, `db.global`, `db.profile`, and so on), and each is a **live view into the saved table for the relevant key**. You read and write them like ordinary Lua tables and AceDB persists the correct slice automatically: `db.char` resolves to the table for the current character, `db.realm` to the current realm's table, `db.global` to one account-wide table, etc. (The tables are created on first access and defaults are filled in transparently.)
+Each of these is a **live view into the saved table for the relevant key**. You read and write them like ordinary Lua tables and AceDB persists the correct slice automatically.
 
 Profiles work a little differently, because the user can switch which one is active:
 
@@ -30,31 +34,7 @@ Profiles work a little differently, because the user can switch which one is act
 
 So in a typical addon, `self.db.profile` is "the user's current settings", `self.db.profiles` is "every saved settings set", and the active selection is remembered separately for each character.
 
-Creating a new Database using the [`:New`](#new) function will return a new `DBObject`. A database will inherit all functions of the `DBObjectLib` listed here.
-
-If you create a new namespaced child-database ([`:RegisterNamespace`](#registernamespace)), you'll get a `DBObject` as well, but note that the child-databases cannot individually change their profile, and are linked to their parents profile - and because of that, the profile related APIs are not available. Only [`:RegisterDefaults`](#registerdefaults) and [`:ResetProfile`](#resetprofile) are available on child-databases.
-
 For more details on how to use AceDB-3.0, see the [Tutorial](#tutorial) below.
-
-You may also be interested in LibDualSpec-1.0 to do profile switching automatically when switching specs.
-
-## Example
-
-```lua
-MyAddon = LibStub("AceAddon-3.0"):NewAddon("DBExample")
-
--- declare defaults to be used in the DB
-local defaults = {
-    profile = {
-        setting = true,
-    }
-}
-
-function MyAddon:OnInitialize()
-    -- Assuming the .toc says ## SavedVariables: MyAddonDB
-    self.db = LibStub("AceDB-3.0"):New("MyAddonDB", defaults, true)
-end
-```
 
 ## Tutorial
 
@@ -71,7 +51,7 @@ First, declare the `SavedVariables` table in your addon's `.toc` file:
 Then create the database object with [`:New`](#new), passing the name of that table.
 
 ::: warning
-You must create the database **after** the [`ADDON_LOADED`](https://warcraft.wiki.gg/wiki/ADDON_LOADED) event has fired for your addon (that is, in `OnInitialize`); otherwise the table you read will be replaced when the real `SavedVariables` loads.
+You must create the database **after** the [`ADDON_LOADED`](https://warcraft.wiki.gg/wiki/ADDON_LOADED) event has fired for your addon (that is, in [`OnInitialize`](/api/ace-addon#oninitialize)); otherwise the table you read will be replaced when the real `SavedVariables` loads.
 :::
 
 ```lua
@@ -84,7 +64,7 @@ end
 
 ### Accessing & Storing Data
 
-A database object exposes its data through several scopes (see [Scopes](#scopes) below). The most commonly used is `profile`, which lets each character choose which named profile is active.
+A database object exposes its data through several scopes (see [Scopes](#scopes) above). The most commonly used is `profile`, which lets each character choose which named profile is active.
 
 Reading and writing is just plain table access; you can store strings, numbers, or whole nested tables:
 
@@ -92,6 +72,9 @@ Reading and writing is just plain table access; you can store strings, numbers, 
 function AceDBExample:OnEnable()
     if self.db.profile.optionA then
         self.db.profile.playerName = UnitName("player")
+        -- You're not limited to `profile`: read and write any scope the same way, and you can mix them freely on one database
+        self.db.char.money = GetMoney()    -- per-character
+        self.db.global.installed = true    -- account-wide
     end
 end
 ```
@@ -172,20 +155,6 @@ The difference is subtle but important: `['*']` only fills in *undefined* siblin
 :::
 
 A `['*']` value can also be a plain value rather than a table; for example `['*'] = false` for a table that tracks which modules are enabled, with an explicit `true` for the ones that are on.
-
-### Scopes
-
-You can mix scopes freely on the same database, reading and writing each one independently:
-
-```lua
-local charName = UnitName("player")
-
-function MyAddon:OnInitialize()
-    self.db = LibStub("AceDB-3.0"):New("MyAddonDB")
-    self.db.char.money = GetMoney()
-    self.db.global.money[charName] = GetMoney()
-end
-```
 
 ### Reacting to Profile Changes
 

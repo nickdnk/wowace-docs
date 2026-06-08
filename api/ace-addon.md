@@ -424,6 +424,8 @@ returns: { type = "table", desc = "The new addon object, with all specified libr
 Create a new AceAddon-3.0 addon.
 Any libraries you specified will be embedded, and the addon will be scheduled for its [`OnInitialize`](#oninitialize) and [`OnEnable`](#onenable) callbacks. The final addon object, with all libraries embedded, will be returned.
 
+`object` is not a true positional argument: the first argument is used as the base object only if it is a table, otherwise it is taken as the `name` and a fresh object is created. So `NewAddon("MyAddon", ...)` and `NewAddon(myTable, "MyAddon", ...)` are both valid.
+
 ---
 
 ```lua
