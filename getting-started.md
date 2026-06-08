@@ -65,8 +65,8 @@ addon supports:
 ```
 
 ::: tip Interface numbers & supporting multiple versions
-Each interface number identifies a game version, and it increases as the game is patched. `## Interface` accepts a *
-*comma-separated list**, so one `.toc` can support several client flavors at once. The example targets two:
+Each interface number identifies a game version, and it increases as the game is patched. `## Interface` accepts a
+**comma-separated list**, so one `.toc` can support several client flavors at once. The example targets two:
 
 - **`11508`**: Classic Era, patch 1.15.8
 - **`20505`**: Burning Crusade Classic (Anniversary), patch 2.5.5
@@ -102,7 +102,7 @@ the [TOC format reference](https://warcraft.wiki.gg/wiki/TOC_format).
 After the metadata, the `.toc` lists the files to load, top to bottom. There are **two equivalent ways** to pull in the
 Ace3 libraries; pick one. With the **direct** approach the library files are listed in the `.toc` itself; with the
 **embeds.xml** approach that list moves to a separate file (the `embeds.xml` tab below), keeping your own code visually
-separate. Either way, `LibStub` loads first.
+separate. Either way, `LibStub` must be loaded first, followed by `CallbackHandler-1.0`.
 
 ::: code-group
 
