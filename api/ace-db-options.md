@@ -8,7 +8,9 @@ AceDBOptions-3.0 provides a universal AceConfig options screen for managing [Ace
 
 ## Usage
 
-[`:GetOptionsTable`](#getoptionstable) returns a ready-made profile-management group in the standard [AceConfig-3.0 options table](/api/ace-config-options) format. You slot it into your own options table as one sub-group, then register the whole table with [AceConfig-3.0](/api/ace-config) as usual:
+[`:GetOptionsTable`](#getoptionstable) returns a ready-made profile-management group in the
+standard [AceConfig-3.0 options table](/api/ace-config-options) format. You slot it into your own options table as one
+subgroup, then register the whole table with [AceConfig-3.0](/api/ace-config) as usual:
 
 ```lua
 local options = {
@@ -25,7 +27,10 @@ local options = {
 LibStub("AceConfig-3.0"):RegisterOptionsTable("MyAddon", options)
 ```
 
-`self.db` is your AceDB object, so call this once the database exists (e.g. in `OnInitialize`); the only requirement is that the group is in your options table before you register it. The profile list it shows is queried live each time the panel opens, so it always reflects the current profiles. The returned group handles switching, copying, resetting and deleting profiles, so you don't write any of that UI yourself.
+`self.db` is your AceDB object, so call this once the database exists (e.g. in `OnInitialize`); the only requirement is
+that the group is in your options table before you register it. The profile list it shows is queried live each time the
+panel opens, so it always reflects the current profiles. The returned group handles switching, copying, resetting and
+deleting profiles, so you don't write any of that UI yourself.
 
 ::: warning
 The generated options table is shared between all addons that use it; do not modify it.

@@ -8,9 +8,10 @@ A checkbox or radio button control with an optional label, description, and imag
 
 Create with `AceGUI:Create("CheckBox")`. It inherits the [Common Widget API](/acegui/widget-api).
 
-**Widget type:** `CheckBox` · **Version:** 26
+**Widget type:** `CheckBox`
 
 ## Methods
+
 ````apimethod
 name: widget:SetValue
 params:
@@ -91,9 +92,11 @@ Internal layout hook called when the width changes; re-wraps the description tex
 
 ## Defaults
 
-On acquire the control resets to: checkbox type (not radio), value `false`, tri-state off, width 200, no image, not disabled, and no description.
+On acquire the control resets to: checkbox type (not radio), value `false`, tri-state off, width 200, no image, not
+disabled, and no description.
 
 ## Callbacks
+
 ````apimethod
 name: OnValueChanged
 kind: callback
@@ -118,6 +121,7 @@ Fired when the mouse leaves the control. Subscribe with `widget:SetCallback`.
 ````
 
 ## Example
+
 ```lua
 local cb = AceGUI:Create("CheckBox")
 cb:SetLabel("Enable feature")

@@ -4,11 +4,16 @@ description: "AceConfigRegistry-3.0 handles central registration of AceConfig op
 
 # AceConfigRegistry-3.0
 
-AceConfigRegistry-3.0 handles central registration of options tables in use by addons and modules. Options tables can be registered as raw tables, OR as function refs that return a table. Such functions receive three arguments: `uiType`, `uiName`, `appName`.
+AceConfigRegistry-3.0 handles central registration of options tables in use by addons and modules. Options tables can be
+registered as raw tables, OR as function refs that return a table. Such functions receive three arguments: `uiType`,
+`uiName`, `appName`.
 
-Valid `uiType` values: `"cmd"`, `"dropdown"`, `"dialog"`. This is verified by the library at call time. The `uiName` field is expected to contain the full name of the calling addon, including version, e.g. `"FooBar-1.0"`. This is verified by the library at call time. The `appName` field is the options table name as given at registration time.
+Valid `uiType` values: `"cmd"`, `"dropdown"`, `"dialog"`. This is verified by the library at call time. The `uiName`
+field is expected to contain the full name of the calling addon, including version, e.g. `"FooBar-1.0"`. This is
+verified by the library at call time. The `appName` field is the options table name as given at registration time.
 
-[`:IterateOptionsTables()`](#iterateoptionstables) (and [`:GetOptionsTable()`](#getoptionstable) if only given one argument) return a function reference that the requesting config handling addon must call with valid `uiType`, `uiName`.
+[`:IterateOptionsTables()`](#iterateoptionstables) (and [`:GetOptionsTable()`](#getoptionstable) if only given one
+argument) return a function reference that the requesting config handling addon must call with valid `uiType`, `uiName`.
 
 ## API Reference
 

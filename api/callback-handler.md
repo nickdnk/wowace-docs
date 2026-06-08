@@ -4,13 +4,20 @@ description: "CallbackHandler-1.0 is the dispatch engine powering callbacks and 
 
 # CallbackHandler-1.0
 
-CallbackHandler-1.0 is the small dispatch engine that powers the "callback" and "message" systems across the Ace suite: [AceEvent-3.0](/api/ace-event), [AceComm-3.0](/api/ace-comm), [AceBucket-3.0](/api/ace-bucket), [AceDB-3.0](/api/ace-db#callbacks)'s profile callbacks, and [AceConfigRegistry-3.0](/api/ace-config-registry) all build on it. You rarely call it directly, but understanding it explains how those callbacks behave.
+CallbackHandler-1.0 is the small dispatch engine that powers the "callback" and "message" systems across the Ace
+suite: [AceEvent-3.0](/api/ace-event), [AceComm-3.0](/api/ace-comm), [AceBucket-3.0](/api/ace-bucket),
+[AceDB-3.0](/api/ace-db#callbacks)'s profile callbacks, and [AceConfigRegistry-3.0](/api/ace-config-registry) all build
+on it. You rarely call it directly, but understanding it explains how those callbacks behave.
 
-It has two sides: **addon authors** register handlers on a library that exposes CallbackHandler methods, and **library authors** create a registry to fire events into.
+It has two sides: **addon authors** register handlers on a library that exposes CallbackHandler methods, and **library
+authors** create a registry to fire events into.
 
 ## For addon authors
 
-When a library is "powered by CallbackHandler", it exposes registration methods, by convention [`RegisterCallback`](#registercallback), [`UnregisterCallback`](#unregistercallback), and [`UnregisterAllCallbacks`](#unregisterallcallbacks). These are **called with a dot** and an explicit first argument (your object, or a string addon id) that identifies you as the owner of the registration:
+When a library is "powered by CallbackHandler", it exposes registration methods, by convention
+[`RegisterCallback`](#registercallback), [`UnregisterCallback`](#unregistercallback), and
+[`UnregisterAllCallbacks`](#unregisterallcallbacks). These are **called with a dot** and an explicit first argument
+(your object, or a string addon id) that identifies you as the owner of the registration:
 
 ```lua
 -- e.g. AceDB exposes these on the db object
@@ -22,16 +29,20 @@ end
 ```
 
 ::: tip Why the dot, and the explicit `self`
-[`RegisterCallback`](#registercallback) is not called with `:`; you pass your `self` (or an `"addonId"` string) explicitly as the first argument. CallbackHandler uses it both as the `self` for method-style handlers and as the key to unregister you later. Calling it as `lib:RegisterCallback(...)` (passing the library as `self`) is an error.
+[`RegisterCallback`](#registercallback) is not called with `:`; you pass your `self` (or an `"addonId"` string)
+explicitly as the first argument. CallbackHandler uses it both as the `self` for method-style handlers and as the key to
+unregister you later. Calling it as `lib:RegisterCallback(...)` (passing the library as `self`) is an error.
 :::
 
 How your handler is invoked:
 
 - **`method` as a string** → called as `self[method](self, event, ...)`.
 - **`method` as a function** → called as `method(event, ...)`.
-- If you supplied an **`arg`**, it is inserted *before* the event name: `self[method](self, arg, event, ...)` / `method(arg, event, ...)`.
+- If you supplied an **`arg`**, it is inserted *before* the event name: `self[method](self, arg, event, ...)` /
+  `method(arg, event, ...)`.
 
-The first value your handler receives is always the **event name** (handy for sharing one handler across several events); the firing library's own arguments follow.
+The first value your handler receives is always the **event name** (handy for sharing one handler across several
+events); the firing library's own arguments follow.
 
 ````apimethod
 name: obj.RegisterCallback
@@ -109,7 +120,9 @@ end
 
 ### Lazy activation hooks
 
-The registry exposes two optional hooks you can assign. They let a library do expensive setup only while something is actually listening; this is how AceEvent only registers a game event with the client while at least one handler wants it:
+The registry exposes two optional hooks you can assign. They let a library do expensive setup only while something is
+actually listening; this is how AceEvent only registers a game event with the client while at least one handler wants
+it:
 
 - **`registry.OnUsed(registry, target, eventname)`**: called when `eventname` gets its **first** handler.
 - **`registry.OnUnused(registry, target, eventname)`**: called when `eventname` loses its **last** handler.

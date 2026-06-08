@@ -12,7 +12,9 @@ Provides an API to register an options table with the config registry, as well a
 
 ### Defining an options table and handlers
 
-You describe your options as a declarative table; see the [options table reference](/api/ace-config-options) for the full format. The part AceConfig relies on is how each option reads and writes its value, through `get`/`set` directives. These can be plain functions, or method names resolved on the table's `handler` object:
+You describe your options as a declarative table; see the [options table reference](/api/ace-config-options) for the
+full format. The part AceConfig relies on is how each option reads and writes its value, through `get`/`set` directives.
+These can be plain functions, or method names resolved on the table's `handler` object:
 
 ```lua
 local options = {
@@ -41,7 +43,8 @@ end
 
 ### Registering the options
 
-Register the table with AceConfig, optionally tying it to slash command(s) (handled via [AceConfigCmd-3.0](/api/ace-config-cmd), which uses [AceConsole-3.0](/api/ace-console) to register the command):
+Register the table with AceConfig, optionally tying it to slash command(s) (handled
+via [AceConfigCmd-3.0](/api/ace-config-cmd), which uses [AceConsole-3.0](/api/ace-console) to register the command):
 
 ```lua
 LibStub("AceConfig-3.0"):RegisterOptionsTable("MyAddonName", options, { "myslash", "myslashtwo" })
@@ -51,7 +54,9 @@ Pass `nil` as the `slashcmd` argument if you don't want a slash command (e.g. GU
 
 ### Displaying the options
 
-Registering builds the slash command (if you passed one), but the GUI is rendered by [AceConfigDialog-3.0](/api/ace-config-dialog) on demand, using the **same application name**. Add the options to the Blizzard "Settings" panel, open them as a standalone window, or both:
+Registering builds the slash command (if you passed one), but the GUI is rendered
+by [AceConfigDialog-3.0](/api/ace-config-dialog) on demand, using the **same application name**. Add the options to the
+Blizzard "Settings" panel, open them as a standalone window, or both:
 
 ```lua
 local AceConfigDialog = LibStub("AceConfigDialog-3.0")
@@ -65,7 +70,11 @@ AceConfigDialog:Open("MyAddonName")
 
 ### Putting it together
 
-The application name (`"MyAddonName"`) is the thread that ties everything together: you pass it to [`:RegisterOptionsTable`](#registeroptionstable), and the same name to [`AceConfigDialog:Open`](/api/ace-config-dialog#open) or [`AceConfigDialog:AddToBlizOptions`](/api/ace-config-dialog#addtoblizoptions). A typical addon does all of this once, at load:
+The application name (`"MyAddonName"`) is the thread that ties everything together: you pass it to
+[`:RegisterOptionsTable`](#registeroptionstable), and the same name to
+[`AceConfigDialog:Open`](/api/ace-config-dialog#open) or
+[`AceConfigDialog:AddToBlizOptions`](/api/ace-config-dialog#addtoblizoptions). A typical addon does all of this once, at
+load:
 
 ```lua
 function MyAddon:OnInitialize()

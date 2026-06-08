@@ -14,7 +14,8 @@ It automatically splits the messages into multiple parts and rebuilds them on th
 
 ### Sending messages to other clients
 
-Send data with [`:SendCommMessage`](#sendcommmessage): give it a `prefix` tag, the `text` to send (any length; it's split and reassembled for you), and a `distribution` channel:
+Send data with [`:SendCommMessage`](#sendcommmessage): give it a `prefix` tag, the `text` to send (any length; it's
+split and reassembled for you), and a `distribution` channel:
 
 ```lua
 MyAddon:SendCommMessage("MyPrefix", "the data to send", "RAID")
@@ -22,7 +23,9 @@ MyAddon:SendCommMessage("MyPrefix", "more data to send", "WHISPER", "charname")
 ```
 
 ::: tip
-The valid distributions (`"PARTY"`, `"RAID"`, `"GUILD"`, `"WHISPER"`, …) are defined by the game's [`C_ChatInfo.SendAddonMessage`](https://warcraft.wiki.gg/wiki/API_C_ChatInfo.SendAddonMessage) API and vary by client version.
+The valid distributions (`"PARTY"`, `"RAID"`, `"GUILD"`, `"WHISPER"`, …) are defined by the game's
+[`C_ChatInfo.SendAddonMessage`](https://warcraft.wiki.gg/wiki/API_C_ChatInfo.SendAddonMessage) API and vary by client
+version.
 :::
 
 ### Receiving messages

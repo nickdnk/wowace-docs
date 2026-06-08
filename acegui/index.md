@@ -9,41 +9,65 @@ AceGUI-3.0 provides access to numerous widgets which can be used to create GUIs.
 AceGUI is used by `AceConfigDialog` to create the option GUIs, but you can use it by itself to create any custom GUI.
 
 ::: warning
-When using AceGUI-3.0 directly, **do not modify the underlying frames of the widgets**. Any "unknown" change to a widget will cause addons that later pull it from the widget pool to misbehave. If some part of a widget needs to be modifiable, open a ticket so a proper API can be added; do not reach into the frame yourself.
+When using AceGUI-3.0 directly, **do not modify the underlying frames of the widgets**. Any "unknown" change to a widget
+will cause addons that later pull it from the widget pool to misbehave. If some part of a widget needs to be modifiable,
+open a ticket so a proper API can be added; do not reach into the frame yourself.
 :::
 
 ## Widgets & Containers
 
-Widgets are the individual controls you place in a GUI (buttons, editboxes, sliders, and so on). Containers are special widgets that hold and lay out other widgets, such as frames and tab groups.
+Widgets are the individual controls you place in a GUI (buttons, editboxes, sliders, and so on). Containers are special
+widgets that hold and lay out other widgets, such as frames and tab groups.
 
-- **Widgets:** see the [Button](/acegui/widgets/button), [CheckBox](/acegui/widgets/checkbox), [EditBox](/acegui/widgets/editbox), [Slider](/acegui/widgets/slider) pages and the rest of the Widgets section in the sidebar.
-- **Containers:** see [Frame](/acegui/containers/frame), [TabGroup](/acegui/containers/tabgroup), and the rest of the Containers section.
-- **Common Widget API:** methods shared by every widget are documented on the [Common Widget API](/acegui/widget-api) page.
+- **Widgets:** see
+  the [Button](/acegui/widgets/button), [CheckBox](/acegui/widgets/checkbox), [EditBox](/acegui/widgets/editbox),
+- [Slider](/acegui/widgets/slider) pages and the rest of the Widgets section in the sidebar.
+- **Containers:** see [Frame](/acegui/containers/frame), [TabGroup](/acegui/containers/tabgroup), and the rest of the
+  Containers section.
+- **Common Widget API:** methods shared by every widget are documented on the [Common Widget API](/acegui/widget-api)
+  page.
 - New to AceGUI? Start with the [Tutorial](#tutorial) below.
 
 ## Frame pooling
 
-The WoW API has **no way to destroy a frame**. Once you call [`CreateFrame`](https://warcraft.wiki.gg/wiki/API_CreateFrame), that frame exists for the rest of the session. You can `:Hide()` it, but it keeps consuming memory and stays referenced by the client. Addons that build UI dynamically (rebuilding a list every update, opening the same window repeatedly) and create fresh frames each time **leak frames** for the whole session.
+The WoW API has **no way to destroy a frame**. Once you call
+[`CreateFrame`](https://warcraft.wiki.gg/wiki/API_CreateFrame), that frame exists for the rest of the session. You can
+[`Hide`](https://warcraft.wiki.gg/wiki/API_ScriptRegion_Hide) it, but it keeps consuming memory and stays referenced by
+the client. Addons that build UI dynamically (rebuilding a list every update, opening the same window repeatedly) and
+create fresh frames each time **leak frames** for the whole session.
 
 AceGUI solves this with a **widget pool**. Every widget type has a pool of reusable instances:
 
-- [`AceGUI:Create(type)`](#create) takes a widget from that type's pool if one is free, and only calls `CreateFrame` when the pool is empty. On reuse it calls the widget's [`OnAcquire`](#widget-lifecycle-onacquire-onrelease) to reset it to defaults.
-- [`AceGUI:Release(widget)`](#release) does **not** destroy the widget; it wipes the widget's data, hides it, and returns it to the pool so the next [`Create`](#create) of that type can reuse it. Releasing a container also releases all of its children.
+- [`AceGUI:Create(type)`](#create) takes a widget from that type's pool if one is free, and only calls `CreateFrame`
+  when the pool is empty. On reuse, it calls the widget's [`OnAcquire`](#widget-lifecycle-onacquire-onrelease) to reset
+  it to defaults.
+- [`AceGUI:Release(widget)`](#release) does **not** destroy the widget; it wipes the widget's data, hides it, and
+  returns it to the pool so the next [`Create`](#create) of that type can reuse it. Releasing a container also releases
+  all of its children.
 
-So instead of leaking a frame per redraw, you [`Create`](#create) widgets when you need them and [`Release`](#release) them when you're done; the underlying frames are recycled, across your addon *and* every other addon using AceGUI. The practical rules:
+So instead of leaking a frame per redraw, you [`Create`](#create) widgets when you need them and [`Release`](#release)
+them when you're done; the underlying frames are recycled, across your addon *and* every other addon using AceGUI. The
+practical rules:
 
 - Release a window in its [`OnClose`](/acegui/containers/frame#onclose) callback (`AceGUI:Release(widget)`).
-- Call [`container:ReleaseChildren`](/acegui/widget-api#releasechildren) before redrawing a group's contents, rather than creating new child widgets each time.
-- If you never release, the pool never gets anything back and your addon's frame usage grows just like manual `CreateFrame` would.
+- Call [`container:ReleaseChildren`](/acegui/widget-api#releasechildren) before redrawing a group's contents, rather
+  than creating new child widgets each time.
+- If you never release, the pool never gets anything back and your addon's frame usage grows just like manual
+  `CreateFrame` would.
 
 ### Widget lifecycle: OnAcquire & OnRelease
 
 Each widget type defines two internal lifecycle hooks that the pool drives:
 
-- **[`OnAcquire`](/acegui/widget-api#onacquire)**: called by [`AceGUI:Create`](#create) every time a widget is handed out (whether freshly created or reused from the pool). It resets the widget to its default state (size, text, value, etc.) so a recycled widget never carries over data from its previous user.
-- **[`OnRelease`](/acegui/widget-api#onrelease)**: called by [`AceGUI:Release`](#release) before the widget returns to the pool. It clears the widget's data and hides it.
+- **[`OnAcquire`](/acegui/widget-api#onacquire)**: called by [`AceGUI:Create`](#create) every time a widget is handed
+  out (whether freshly created or reused from the pool). It resets the widget to its default state (size, text, value,
+  etc.) so a recycled widget never carries over data from its previous user.
+- **[`OnRelease`](/acegui/widget-api#onrelease)**: called by [`AceGUI:Release`](#release) before the widget returns to
+  the pool. It clears the widget's data and hides it.
 
-These are implementation details of each widget, not something you call yourself; you create widgets, set them up through their public methods, and release them. They explain *why* a freshly created widget always starts from defaults and why you re-apply your settings after each `Create`.
+These are implementation details of each widget, not something you call yourself; you create widgets, set them up
+through their public methods, and release them. They explain *why* a freshly created widget always starts from defaults
+and why you re-apply your settings after each `Create`.
 
 ## Example
 
@@ -66,7 +90,8 @@ f:AddChild(btn)
 
 ## Tutorial
 
-This walk-through builds a simple UI, explains how the layouts work, and shows several widgets in action. All snippets assume a local `AceGUI` reference:
+This walk-through builds a simple UI, explains how the layouts work, and shows several widgets in action. All snippets
+assume a local `AceGUI` reference:
 
 ```lua
 local AceGUI = LibStub("AceGUI-3.0")
@@ -74,7 +99,8 @@ local AceGUI = LibStub("AceGUI-3.0")
 
 ### A Container Frame
 
-Every UI starts with a container. You can use your own container frames to place controls in, but for this tutorial we start with a simple AceGUI `Frame` container widget.
+Every UI starts with a container. You can use your own container frames to place controls in, but for this tutorial we
+start with a simple AceGUI `Frame` container widget.
 
 Let's create an empty container frame and fill some of its attributes:
 
@@ -84,17 +110,25 @@ frame:SetTitle("Example Frame")
 frame:SetStatusText("AceGUI-3.0 Example Container Frame")
 ```
 
-You'll see the frame on screen. Every `Frame` widget comes with a heading, a status bar and a close button, as well as some artwork to make it look like a proper frame. This frame can be freely resized by the user using the drag-handle in the bottom-right corner, or by dragging the bottom or right border.
+You'll see the frame on screen. Every `Frame` widget comes with a heading, a status bar and a close button, as well as
+some artwork to make it look like a proper frame. This frame can be freely resized by the user using the drag-handle in
+the bottom-right corner, or by dragging the bottom or right border.
 
-Your code can set a size and position for the frame as well, using the default [`SetWidth`](https://warcraft.wiki.gg/wiki/API_Region_SetWidth), [`SetHeight`](https://warcraft.wiki.gg/wiki/API_Region_SetHeight) and [`SetPoint`](https://warcraft.wiki.gg/wiki/API_Region_SetPoint) frame functions.
+Your code can set a size and position for the frame as well, using the
+default [`SetWidth`](https://warcraft.wiki.gg/wiki/API_Region_SetWidth),
+[`SetHeight`](https://warcraft.wiki.gg/wiki/API_Region_SetHeight) and
+[`SetPoint`](https://warcraft.wiki.gg/wiki/API_Region_SetPoint) frame functions.
 
 ::: tip
-To learn more about the `Frame` widget or containers in general, see the [Frame container reference](/acegui/containers/frame) and the rest of the Containers section, plus the [Common Widget API](/acegui/widget-api).
+To learn more about the `Frame` widget or containers in general, see
+the [Frame container reference](/acegui/containers/frame) and the rest of the Containers section, plus
+the [Common Widget API](/acegui/widget-api).
 :::
 
 ### Placing Widgets on the Frame
 
-We'll create a simple button and an editbox on our frame. This is as simple as asking AceGUI to create them, and adding them as child frames to the container.
+We'll create a simple button and an editbox on our frame. This is as simple as asking AceGUI to create them, and adding
+them as child frames to the container.
 
 ```lua
 local frame = AceGUI:Create("Frame")
@@ -115,20 +149,28 @@ frame:AddChild(button)
 ```
 
 ::: warning
-**Always set a width** for widgets, or they might inherit the width of their previous use in the widget pool, making your UI look inconsistent. Don't rely on the default values.
+**Always set a width** for widgets, or they might inherit the width of their previous use in the widget pool, making
+your UI look inconsistent. Don't rely on the default values.
 :::
 
-Notice the creation of the `Frame` container has changed slightly: every container requires you to set a layout. AceGUI-3.0 ships with four (`Flow`, `List`, `Fill` and `Table`) described under [Layouts](#layouts) below; `Flow` is usually the best general-purpose choice.
+Notice the creation of the `Frame` container has changed slightly: every container requires you to set a layout.
+AceGUI-3.0 ships with four (`Flow`, `List`, `Fill` and `Table`) described under [Layouts](#layouts) below; `Flow` is
+usually the best general-purpose choice.
 
-We also set an `OnClose` callback on the `Frame` widget, which releases the container once it's closed. Releasing AceGUI frames returns them to the widget pool and allows them to be reused by other addons without creating new frames, reducing overall memory use. Releasing a container widget always releases its child frames as well, so we don't have to release them separately.
+We also set an `OnClose` callback on the `Frame` widget, which releases the container once it's closed. Releasing AceGUI
+frames returns them to the widget pool and allows them to be reused by other addons without creating new frames,
+reducing overall memory use. Releasing a container widget always releases its child frames as well, so we don't have to
+release them separately.
 
 ::: warning
-Always release your frames once your UI no longer needs them (e.g. in dynamic lists), or the memory consumption of your addon will increase a lot.
+Always release your frames once your UI no longer needs them (e.g. in dynamic lists), or the memory consumption of your
+addon will increase a lot.
 :::
 
 ### Adding Functionality
 
-We have a nice frame with an input box and a button, but it's not doing much yet. Let's make clicking the button print the contents of the editbox.
+We have a nice frame with an input box and a button, but it's not doing much yet. Let's make clicking the button print
+the contents of the editbox.
 
 ```lua
 local textStore
@@ -152,15 +194,20 @@ button:SetCallback("OnClick", function() print(textStore) end)
 frame:AddChild(button)
 ```
 
-AceGUI widgets usually do **not** have a "get" function to read their contents; instead they fire a callback that notifies the addon of any changes to their data. `OnEnterPressed` is the callback of an `EditBox` that notifies us of a change to the text; we save that text in our `textStore` variable. In the `OnClick` callback of the button we print this variable.
+AceGUI widgets usually do **not** have a "get" function to read their contents; instead they fire a callback that
+notifies the addon of any changes to their data. `OnEnterPressed` is the callback of an `EditBox` that notifies us of a
+change to the text; we save that text in our `textStore` variable. In the `OnClick` callback of the button we print this
+variable.
 
 ::: tip
-All callbacks in AceGUI-3.0 always receive the widget that issued the callback as the first parameter, and the name of the callback as the second. Any data provided by the widget follows after that.
+All callbacks in AceGUI-3.0 always receive the widget that issued the callback as the first parameter, and the name of
+the callback as the second. Any data provided by the widget follows after that.
 :::
 
 ### Adding a Group Control
 
-The ability to have different groups of controls on a frame is something most half-complex UIs will need. We'll demonstrate it with a `TabGroup`.
+The ability to have different groups of controls on a frame is something most half-complex UIs will need. We'll
+demonstrate it with a `TabGroup`.
 
 The concept:
 
@@ -168,7 +215,8 @@ The concept:
 2. Create a `TabGroup` widget and add it as the only child of the frame.
 3. Use `:SetTabs` to define which tabs should be displayed.
 4. Select the initial tab with `:SelectTab`.
-5. Handle the `OnGroupSelected` callback to know when to redraw content: release all old child frames and draw the new widgets on the container passed by the event.
+5. Handle the `OnGroupSelected` callback to know when to redraw content: release all old child frames and draw the new
+   widgets on the container passed by the event.
 
 ```lua
 -- function that draws the widgets for the first tab
@@ -230,7 +278,9 @@ frame:AddChild(tab)
 ```
 
 ::: tip
-More details on the widgets and their callbacks are in the [Widgets](/acegui/widgets/button) and [Containers](/acegui/containers/tabgroup) sections, and the shared methods on the [Common Widget API](/acegui/widget-api) page.
+More details on the widgets and their callbacks are in the [Widgets](/acegui/widgets/button)
+and [Containers](/acegui/containers/tabgroup) sections, and the shared methods on
+the [Common Widget API](/acegui/widget-api) page.
 :::
 
 ## API Reference
@@ -376,9 +426,14 @@ Return the version of the currently registered widget type.
 
 ## Layouts
 
-AceGUI-3.0 registers four layouts in the source. A container's layout is set with [`container:SetLayout("<name>")`](/acegui/widget-api#setlayout); names are case-insensitive.
+AceGUI-3.0 registers four layouts in the source. A container's layout is set with
+[`container:SetLayout("<name>")`](/acegui/widget-api#setlayout); names are case-insensitive.
 
 - **List**: A very simple layout. Children are stacked on top of each other down the left side of the container.
-- **Fill**: A single control (the first child) fills the whole content area. Useful for placing one container inside another.
-- **Flow**: Children fill one row, then flow onto the next row when there isn't enough horizontal space left. This is usually the best general-purpose layout.
-- **Table**: Arranges children into a grid with configurable columns, spacing, alignment, and colspan/rowspan. Column widths can be fixed, relative, content-based, or weight-distributed. Configure it via the container's `table` user data (e.g. `container:SetUserData("table", { columns = { 1, 1 }, space = 4 })`).
+- **Fill**: A single control (the first child) fills the whole content area. Useful for placing one container inside
+  another.
+- **Flow**: Children fill one row, then flow onto the next row when there isn't enough horizontal space left. This is
+  usually the best general-purpose layout.
+- **Table**: Arranges children into a grid with configurable columns, spacing, alignment, and colspan/rowspan. Column
+  widths can be fixed, relative, content-based, or weight-distributed. Configure it via the container's `table` user
+  data (e.g. `container:SetUserData("table", { columns = { 1, 1 }, space = 4 })`).

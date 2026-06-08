@@ -4,15 +4,20 @@ description: "The AceGUI-3.0 Dropdown widget: a labelled dropdown menu with a sc
 
 # Dropdown
 
-A dropdown menu built on [`UIDropDownMenuTemplate`](https://warcraft.wiki.gg/wiki/UIDropDownMenuTemplate) with an optional label. It opens a scrollable pullout of selectable items and supports both single-select and multi-select (checkbox) modes.
+A dropdown menu built on [`UIDropDownMenuTemplate`](https://warcraft.wiki.gg/wiki/UIDropDownMenuTemplate) with an
+optional label. It opens a scrollable pullout of selectable items and supports both single-select and multi-select (
+checkbox) modes.
 
 Create with `AceGUI:Create("Dropdown")`. It inherits the [Common Widget API](/acegui/widget-api).
 
-**Widget type:** `Dropdown` · **Version:** 36
+**Widget type:** `Dropdown`
 
-> The pullout and its individual entries (`Dropdown-Pullout`, `Dropdown-Item-Toggle`, `Dropdown-Item-Execute`, etc.) are internal helper widgets created automatically. You normally only interact with the `Dropdown` widget's own methods below.
+> The pullout and its individual entries (`Dropdown-Pullout`, `Dropdown-Item-Toggle`, `Dropdown-Item-Execute`, etc.) are
+> internal helper widgets created automatically. You normally only interact with the `Dropdown` widget's own methods
+> below.
 
 ## Methods
+
 ````apimethod
 name: widget:SetList
 params:
@@ -121,9 +126,11 @@ Closes the pullout if it is open.
 
 ## Defaults
 
-On acquire the widget resets to: height 44, width 200, no label, auto pullout width, and an empty list. On release it closes and releases its pullout and clears text, value, disabled, and multiselect state.
+On acquire the widget resets to: height 44, width 200, no label, auto pullout width, and an empty list. On release it
+closes and releases its pullout and clears text, value, disabled, and multiselect state.
 
 ## Callbacks
+
 ````apimethod
 name: OnValueChanged
 kind: callback
@@ -163,6 +170,7 @@ Fired when the mouse leaves the dropdown. Subscribe with `widget:SetCallback`.
 ````
 
 ## Example
+
 ```lua
 local dd = AceGUI:Create("Dropdown")
 dd:SetLabel("Choose a class")

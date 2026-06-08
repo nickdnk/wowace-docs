@@ -4,13 +4,17 @@ description: "The AceGUI-3.0 InteractiveLabel widget: a Label that responds to t
 
 # InteractiveLabel
 
-A [Label](/acegui/widgets/label) that responds to mouse interaction, adding a highlight texture and click/hover callbacks.
+A [Label](/acegui/widgets/label) that responds to mouse interaction, adding a highlight texture and click/hover
+callbacks.
 
-Create with `AceGUI:Create("InteractiveLabel")`. It inherits the [Common Widget API](/acegui/widget-api). It is built on top of the `Label` widget and supports all of [Label's methods](/acegui/widgets/label#methods) (`SetText`, `SetImage`, `SetColor`, `SetFontObject`, etc.) in addition to the methods below.
+Create with `AceGUI:Create("InteractiveLabel")`. It inherits the [Common Widget API](/acegui/widget-api). It is built on
+top of the `Label` widget and supports all of [Label's methods](/acegui/widgets/label#methods) (`SetText`, `SetImage`,
+`SetColor`, `SetFontObject`, etc.) in addition to the methods below.
 
-**Widget type:** `InteractiveLabel` · **Version:** 21
+**Widget type:** `InteractiveLabel`
 
 ## Methods
+
 ````apimethod
 name: widget:SetHighlight
 params:
@@ -37,11 +41,13 @@ Enables or disables interaction. When disabled, the frame stops accepting mouse 
 
 ## Defaults
 
-On acquire the interactive label runs the inherited Label acquire (resetting text, image, color, font, and justification), then clears the highlight texture and tex-coords and sets the widget enabled.
+On acquire the interactive label runs the inherited Label acquire (resetting text, image, color, font, and
+justification), then clears the highlight texture and tex-coords and sets the widget enabled.
 
 ## Callbacks
 
 In addition to any callbacks inherited from Label, the following are fired:
+
 ````apimethod
 name: OnClick
 kind: callback
@@ -66,6 +72,7 @@ Fired when the mouse leaves the label. Subscribe with `widget:SetCallback`.
 ````
 
 ## Example
+
 ```lua
 local label = AceGUI:Create("InteractiveLabel")
 label:SetText("Click me")

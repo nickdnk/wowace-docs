@@ -6,7 +6,8 @@ description: "AceHook-3.0 offers safe hooking and unhooking of functions, method
 
 <Embeddable />
 
-AceHook-3.0 offers safe Hooking/Unhooking of functions, methods and frame scripts. Using AceHook-3.0 is recommended when you need to unhook your hooks again, so the hook chain isn't broken when you manually restore the original function.
+AceHook-3.0 offers safe Hooking/Unhooking of functions, methods and frame scripts. Using AceHook-3.0 is recommended when
+you need to unhook your hooks again, so the hook chain isn't broken when you manually restore the original function.
 
 ## Usage
 
@@ -18,7 +19,8 @@ MyAddon = LibStub("AceAddon-3.0"):NewAddon("MyAddon", "AceHook-3.0")
 
 ### Standard (pre-) hooks
 
-A standard hook runs before the original and automatically calls the original afterward. Specify a function name, or an object + method name:
+A standard hook runs before the original and automatically calls the original afterward. Specify a function name, or an
+object + method name:
 
 ```lua
 MyAddon:Hook("APIFunctionName")
@@ -53,7 +55,8 @@ end
 
 ### Secure (post-) hooks
 
-Secure hooks run *after* the original; return values are ignored. Use these for protected Blizzard UI elements to avoid taint:
+Secure hooks run *after* the original; return values are ignored. Use these for protected Blizzard UI elements to avoid
+taint:
 
 ```lua
 MyAddon:SecureHook("APISecureFunctionName")

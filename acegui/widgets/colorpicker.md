@@ -4,13 +4,16 @@ description: "The AceGUI-3.0 ColorPicker widget: a color swatch with an optional
 
 # ColorPicker
 
-A color swatch with an optional label that opens Blizzard's [`ColorPickerFrame`](https://warcraft.wiki.gg/wiki/ColorPickerFrame) when clicked, with optional alpha (opacity) support.
+A color swatch with an optional label that opens Blizzard's
+[`ColorPickerFrame`](https://warcraft.wiki.gg/wiki/ColorPickerFrame) when clicked, with optional alpha (opacity)
+support.
 
 Create with `AceGUI:Create("ColorPicker")`. It inherits the [Common Widget API](/acegui/widget-api).
 
-**Widget type:** `ColorPicker` · **Version:** 28
+**Widget type:** `ColorPicker`
 
 ## Methods
+
 ````apimethod
 name: widget:SetColor
 params:
@@ -48,9 +51,11 @@ Enables or disables the swatch. A disabled swatch will not open the color picker
 
 ## Defaults
 
-On acquire the widget resets to: height 24, width 200, alpha disabled, color black opaque (`0, 0, 0, 1`), not disabled, and no label.
+On acquire the widget resets to: height 24, width 200, alpha disabled, color black opaque (`0, 0, 0, 1`), not disabled,
+and no label.
 
 ## Callbacks
+
 ````apimethod
 name: OnValueChanged
 kind: callback
@@ -90,6 +95,7 @@ Fired when the mouse leaves the swatch. Subscribe with `widget:SetCallback`.
 ````
 
 ## Example
+
 ```lua
 local cp = AceGUI:Create("ColorPicker")
 cp:SetLabel("Bar color")

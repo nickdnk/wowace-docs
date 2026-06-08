@@ -6,13 +6,23 @@ description: "The AceGUI-3.0 BlizOptionsGroup container integrates an AceGUI lay
 
 A container that embeds AceGUI options into the Blizzard Interface Options panel.
 
-Create with `AceGUI:Create("BlizOptionsGroup")`. This is a **container**; it inherits the [Common Widget API and container methods](/acegui/widget-api).
+Create with `AceGUI:Create("BlizOptionsGroup")`. This is a **container**; it inherits
+the [Common Widget API and container methods](/acegui/widget-api).
 
-**Widget type:** `BlizOptionsGroup` · **Version:** 26
+**Widget type:** `BlizOptionsGroup`
 
-This container's frame is parented to the Blizzard Interface Options panel container and exposes the hooks Blizzard expects ([`okay`](#okay)/[`cancel`](#cancel)/[`default`](#default)/[`refresh`](#refresh), plus the version 10.0 aliases `OnCommit`/`OnDefault`/`OnRefresh`). It is typically registered with [`InterfaceOptions_AddCategory`](https://warcraft.wiki.gg/wiki/InterfaceOptions_AddCategory) or `Settings.RegisterCanvasLayoutCategory` via its `frame`.
+This container's frame is parented to the Blizzard Interface Options panel container and exposes the handlers Blizzard
+expects, which fire the [`okay`](#okay)/[`cancel`](#cancel)/[`default`](#default)/[`refresh`](#refresh) callbacks below.
+It is typically registered with
+[`InterfaceOptions_AddCategory`](https://warcraft.wiki.gg/wiki/InterfaceOptions_AddCategory)
+or `Settings.RegisterCanvasLayoutCategory` via its `frame`.
+
+On the 10.0+ Settings API the panel's `OnCommit`/`OnDefault`/`OnRefresh` frame handlers are wired to the same `okay`/
+`default`/`refresh` functions, so the callbacks you register fire on both old and new clients. You register the
+callbacks below, never `OnCommit`/`OnDefault`/`OnRefresh` directly.
 
 ## Methods
+
 ````apimethod
 name: container:SetName
 params:
@@ -33,6 +43,7 @@ Set the large heading shown at the top of the panel. A non-empty title shifts th
 > The container also defines `OnWidthSet` and `OnHeightSet` for layout.
 
 ## Callbacks
+
 ````apimethod
 name: OnShow
 kind: callback
@@ -51,7 +62,7 @@ Fired when the panel's frame is hidden.
 name: okay
 kind: callback
 ---
-Fired when Blizzard calls the panel's `okay` handler (settings accepted or Okay button clicked). Also reached via the version 10.0 `OnCommit` alias.
+Fired when Blizzard calls the panel's `okay` handler (settings accepted or Okay button clicked).
 ````
 
 ````apimethod
@@ -65,17 +76,18 @@ Fired when Blizzard calls the panel's `cancel` handler (changes discarded). Note
 name: default
 kind: callback
 ---
-Fired when Blizzard calls the panel's `default` handler (restore defaults). Also reached via the version 10.0 `OnDefault` alias.
+Fired when Blizzard calls the panel's `default` handler (restore defaults).
 ````
 
 ````apimethod
 name: refresh
 kind: callback
 ---
-Fired when Blizzard calls the panel's `refresh` handler (the panel needs to re-read current values). Also reached via the version 10.0 `OnRefresh` alias.
+Fired when Blizzard calls the panel's `refresh` handler (the panel needs to re-read current values).
 ````
 
 ## Example
+
 ```lua
 local AceGUI = LibStub("AceGUI-3.0")
 

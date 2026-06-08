@@ -4,7 +4,9 @@ description: "AceTab-3.0 adds tab-completion to chat edit boxes, registering com
 
 # AceTab-3.0
 
-AceTab-3.0 provides support for tab-completion in chat edit boxes. It lets you register sets of completions that fire when the user presses Tab in a monitored EditBox, optionally gated behind a "prematch" precondition string, with support for cycling through multiple matches, usage statements, and post-processing of matched words.
+AceTab-3.0 provides support for tab-completion in chat edit boxes. It lets you register sets of completions that fire
+when the user presses Tab in a monitored EditBox, optionally gated behind a "prematch" precondition string, with support
+for cycling through multiple matches, usage statements, and post-processing of matched words.
 
 ## API Reference
 

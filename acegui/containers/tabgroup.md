@@ -6,11 +6,13 @@ description: "The AceGUI-3.0 TabGroup container groups widgets and switches betw
 
 A container that switches between groups of widgets using tabs along the top.
 
-Create with `AceGUI:Create("TabGroup")`. This is a **container**; it inherits the [Common Widget API and container methods](/acegui/widget-api).
+Create with `AceGUI:Create("TabGroup")`. This is a **container**; it inherits
+the [Common Widget API and container methods](/acegui/widget-api).
 
-**Widget type:** `TabGroup` · **Version:** 38
+**Widget type:** `TabGroup`
 
 ## Methods
+
 ````apimethod
 name: container:SetTabs
 params:
@@ -52,6 +54,7 @@ Recompute the tab strip layout (sizes, rows, anchoring). Called internally by [`
 > The container also defines `CreateTab`, `OnWidthSet`, `OnHeightSet`, and `LayoutFinished` as internal layout helpers.
 
 ## Callbacks
+
 ````apimethod
 name: OnGroupSelected
 kind: callback
@@ -82,6 +85,7 @@ Fired when the mouse leaves a tab button.
 ````
 
 ## Example
+
 ```lua
 local AceGUI = LibStub("AceGUI-3.0")
 

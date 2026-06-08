@@ -8,9 +8,10 @@ A clickable icon button that displays a texture with an optional caption beneath
 
 Create with `AceGUI:Create("Icon")`. It inherits the [Common Widget API](/acegui/widget-api).
 
-**Widget type:** `Icon` · **Version:** 21
+**Widget type:** `Icon`
 
 ## Methods
+
 ````apimethod
 name: widget:SetLabel
 params:
@@ -54,6 +55,7 @@ On acquire the icon resets to: width 110, height 110, no label, no image, image 
 :::
 
 ## Callbacks
+
 ````apimethod
 name: OnClick
 kind: callback
@@ -78,6 +80,7 @@ Fired when the mouse leaves the icon. Subscribe with `widget:SetCallback`.
 ````
 
 ## Example
+
 ```lua
 local icon = AceGUI:Create("Icon")
 icon:SetImage("Interface\\Icons\\INV_Misc_QuestionMark")

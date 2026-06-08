@@ -8,9 +8,10 @@ A horizontal divider with optional centered title text, used to separate section
 
 Create with `AceGUI:Create("Heading")`. It inherits the [Common Widget API](/acegui/widget-api).
 
-**Widget type:** `Heading` · **Version:** 20
+**Widget type:** `Heading`
 
 ## Methods
+
 ````apimethod
 name: widget:SetText
 params:
@@ -28,6 +29,7 @@ On acquire the heading resets to: empty text, full width, and height 18.
 This widget fires no callbacks.
 
 ## Example
+
 ```lua
 local heading = AceGUI:Create("Heading")
 heading:SetText("Display Options")

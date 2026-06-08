@@ -6,9 +6,11 @@ description: "AceSerializer-3.0 serializes Lua values into a string for sending 
 
 <Embeddable />
 
-AceSerializer-3.0 can serialize any variable (except functions or userdata) into a string format that can be sent over the addon communication channel.
+AceSerializer-3.0 can serialize any variable (except functions or userdata) into a string format that can be sent over
+the addon communication channel.
 
-AceSerializer was designed to keep all data intact, especially very large numbers or floating point numbers, and table structures. The only caveat currently is, that multiple references to the same table will be send individually.
+AceSerializer was designed to keep all data intact, especially very large numbers or floating point numbers, and table
+structures. The only caveat currently is, that multiple references to the same table will be send individually.
 
 ## Usage
 

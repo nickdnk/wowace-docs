@@ -8,9 +8,10 @@ Displays text and optionally an icon, sizing its height dynamically to fit the c
 
 Create with `AceGUI:Create("Label")`. It inherits the [Common Widget API](/acegui/widget-api).
 
-**Widget type:** `Label` · **Version:** 28
+**Widget type:** `Label`
 
 ## Methods
+
 ````apimethod
 name: widget:SetText
 params:
@@ -91,13 +92,15 @@ Layout hook called by AceGUI when the width changes; re-anchors the text and ima
 
 ## Defaults
 
-On acquire the label resets to: width 200, empty text, no image, image size 16×16, white color, default font object, horizontal justify `LEFT`, and vertical justify `TOP`. Height is always derived from the text and image.
+On acquire the label resets to: width 200, empty text, no image, image size 16×16, white color, default font object,
+horizontal justify `LEFT`, and vertical justify `TOP`. Height is always derived from the text and image.
 
 ## Callbacks
 
 This widget fires no widget-specific callbacks.
 
 ## Example
+
 ```lua
 local label = AceGUI:Create("Label")
 label:SetText("Status: ready")

@@ -4,13 +4,15 @@ description: "The AceGUI-3.0 Slider widget: a horizontal slider for picking a nu
 
 # Slider
 
-A graphical horizontal slider for selecting a numeric value within a range, with an editable value box and low/high range labels.
+A graphical horizontal slider for selecting a numeric value within a range, with an editable value box and low/high
+range labels.
 
 Create with `AceGUI:Create("Slider")`. It inherits the [Common Widget API](/acegui/widget-api).
 
-**Widget type:** `Slider` · **Version:** 23
+**Widget type:** `Slider`
 
 ## Methods
+
 ````apimethod
 name: widget:SetValue
 params:
@@ -62,9 +64,11 @@ Enables or disables the slider. When disabled, the slider and value editbox stop
 
 ## Defaults
 
-On acquire the slider resets to: width 200, height 44, not disabled, percent mode off, range `0`–`100` with step `1`, value `0`, and mouse wheel scrolling disabled (it is enabled once the frame is clicked).
+On acquire the slider resets to: width 200, height 44, not disabled, percent mode off, range `0`–`100` with step `1`,
+value `0`, and mouse wheel scrolling disabled (it is enabled once the frame is clicked).
 
 ## Callbacks
+
 ````apimethod
 name: OnValueChanged
 kind: callback
@@ -98,6 +102,7 @@ Fired when the mouse leaves the slider. Subscribe with `widget:SetCallback`.
 ````
 
 ## Example
+
 ```lua
 local slider = AceGUI:Create("Slider")
 slider:SetLabel("Opacity")

@@ -6,11 +6,13 @@ description: "The AceGUI-3.0 TreeGroup container: groups widgets and switches be
 
 A container that switches between groups of widgets using a tree control.
 
-Create with `AceGUI:Create("TreeGroup")`. This is a **container**; it inherits the [Common Widget API and container methods](/acegui/widget-api).
+Create with `AceGUI:Create("TreeGroup")`. This is a **container**; it inherits
+the [Common Widget API and container methods](/acegui/widget-api).
 
-**Widget type:** `TreeGroup` · **Version:** 49
+**Widget type:** `TreeGroup`
 
 ## Methods
+
 ````apimethod
 name: container:SetTree
 params:
@@ -94,9 +96,11 @@ params:
 Rebuild the visible button list from the current tree and status tables. Called automatically after most mutations; call directly if you mutate the tree table in place.
 ````
 
-> The container also defines `CreateButton`, `BuildLevel`, and `ShowScroll` as internal helpers, plus `OnWidthSet`/`OnHeightSet`/`LayoutFinished` for layout.
+> The container also defines `CreateButton`, `BuildLevel`, and `ShowScroll` as internal helpers, plus `OnWidthSet`/
+`OnHeightSet`/`LayoutFinished` for layout.
 
 ## Callbacks
+
 ````apimethod
 name: OnGroupSelected
 kind: callback
@@ -147,17 +151,24 @@ Fired after the user finishes drag-resizing the tree pane.
 
 ## Tree node format
 
-[`SetTree`](#settree) takes an array of node tables. Each node recognizes the following fields (read from the source `addLine`/`UpdateButton`):
+[`SetTree`](#settree) takes an array of node tables. Each node recognizes the following fields (read from the source
+`addLine`/`UpdateButton`):
 
-- `value`: the node's identifier within its level. The full path of `value`s (joined by `\001`) forms the node's **unique value**, which is what [`OnGroupSelected`](#ongroupselected)/[`OnClick`](#onclick) report and what [`SelectByValue`](#selectbyvalue) expects. Sibling node values must be unique within their parent.
+- `value`: the node's identifier within its level. The full path of `value`s (joined by `\001`) forms the node's *
+  *unique value**, which is what [`OnGroupSelected`](#ongroupselected)/[`OnClick`](#onclick) report and what
+  [`SelectByValue`](#selectbyvalue) expects. Sibling node values must be unique within their parent.
 - `text`: the label shown for the node.
 - `icon`: optional texture (path or file ID) drawn left of the text.
-- `iconCoords`: optional table of texture coordinates `{left, right, top, bottom}` (passed to [`SetTexCoord`](https://warcraft.wiki.gg/wiki/API_Texture_SetTexCoord)).
+- `iconCoords`: optional table of texture coordinates `{left, right, top, bottom}` (passed to
+  [`SetTexCoord`](https://warcraft.wiki.gg/wiki/API_Texture_SetTexCoord)).
 - `disabled`: if truthy, the node is greyed out and not mouse-interactive.
-- `children`: optional array of child node tables. A node with `children` is a collapsible branch whose expanded state is tracked per unique value in the status table.
-- `visible`: optional boolean. When the tree is set with a `filter`, nodes with `visible = false` are hidden (and empty branches are pruned).
+- `children`: optional array of child node tables. A node with `children` is a collapsible branch whose expanded state
+  is tracked per unique value in the status table.
+- `visible`: optional boolean. When the tree is set with a `filter`, nodes with `visible = false` are hidden (and empty
+  branches are pruned).
 
 ## Example
+
 ```lua
 local AceGUI = LibStub("AceGUI-3.0")
 

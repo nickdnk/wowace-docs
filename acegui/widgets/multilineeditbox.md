@@ -4,13 +4,15 @@ description: "The AceGUI-3.0 MultiLineEditBox widget: a scrollable multi-line te
 
 # MultiLineEditBox
 
-A scrollable, multi-line text input with an optional label and an `"Accept"` button. Supports inserting chat links and dragging spells/items into the box.
+A scrollable, multi-line text input with an optional label and an `"Accept"` button. Supports inserting chat links and
+dragging spells/items into the box.
 
 Create with `AceGUI:Create("MultiLineEditBox")`. It inherits the [Common Widget API](/acegui/widget-api).
 
-**Widget type:** `MultiLineEditBox` · **Version:** 33
+**Widget type:** `MultiLineEditBox`
 
 ## Methods
+
 ````apimethod
 name: widget:SetText
 params:
@@ -104,9 +106,11 @@ Enables or disables the editbox. When disabled it drops focus, ignores the mouse
 
 ## Defaults
 
-On acquire the widget resets to: empty text, not disabled, width 200, Accept button shown, 4 visible lines, not "entered", and no character limit. On release it clears focus.
+On acquire the widget resets to: empty text, not disabled, width 200, Accept button shown, 4 visible lines, not "
+entered", and no character limit. On release it clears focus.
 
 ## Callbacks
+
 ````apimethod
 name: OnEnterPressed
 kind: callback
@@ -154,6 +158,7 @@ Fired when the mouse leaves the edit box or scroll area. Subscribe with `widget:
 ````
 
 ## Example
+
 ```lua
 local edit = AceGUI:Create("MultiLineEditBox")
 edit:SetLabel("Notes")

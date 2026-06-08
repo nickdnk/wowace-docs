@@ -4,13 +4,16 @@ description: "The AceGUI-3.0 Window container: a movable, resizable top-level wi
 
 # Window
 
-A movable, resizable top-level window with a title bar and a Close button; a lighter-weight alternative to `Frame`, without a status bar.
+A movable, resizable top-level window with a title bar and a Close button; a lighter-weight alternative to `Frame`,
+without a status bar.
 
-Create with `AceGUI:Create("Window")`. This is a **container**; it inherits the [Common Widget API and container methods](/acegui/widget-api) (`AddChild`, `SetLayout`, `ReleaseChildren`, etc.).
+Create with `AceGUI:Create("Window")`. This is a **container**; it inherits
+the [Common Widget API and container methods](/acegui/widget-api) (`AddChild`, `SetLayout`, `ReleaseChildren`, etc.).
 
-**Widget type:** `Window` · **Version:** 8
+**Widget type:** `Window`
 
 ## Methods
+
 ````apimethod
 name: container:SetTitle
 params:
@@ -62,6 +65,7 @@ Hide the underlying frame. (Hiding fires [`OnClose`](#onclose); see Callbacks.)
 ````
 
 ## Callbacks
+
 ````apimethod
 name: OnShow
 kind: callback
@@ -78,9 +82,12 @@ Fired when the window is hidden, including when the user clicks the built-in Clo
 
 ## Layout notes
 
-Like all containers, the window defaults to the `"List"` layout; switch with `SetLayout` (commonly `"Flow"`). The content region is inset from the window edges (34 px horizontally, 57 px vertically). The window is movable by dragging the title bar and resizable via the grips; minimum size is 240×240, default size 700×500.
+Like all containers, the window defaults to the `"List"` layout; switch with `SetLayout` (commonly `"Flow"`). The
+content region is inset from the window edges (34 px horizontally, 57 px vertically). The window is movable by dragging
+the title bar and resizable via the grips; minimum size is 240×240, default size 700×500.
 
 ## Example
+
 ```lua
 local window = AceGUI:Create("Window")
 window:SetTitle("My Window")

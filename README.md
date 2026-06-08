@@ -57,7 +57,12 @@ params:
 returns:
   - { type = "table", desc = "The new database object." }
 ---
-Markdown body: description, examples, even ```lua``` blocks.
+Markdown description of what the method does.
+---
+```lua
+-- optional example; renders last (after the tables) under an "Example" heading
+self.db = LibStub("AceDB-3.0"):New("MyAddonDB", defaults)
+```
 ````
 `````
 
@@ -72,9 +77,9 @@ Rules:
 - **`returns` uses the same Lua-table format**: one `- { type = "…", desc = "…" }` per returned value (add a `name` for a multi-value return). It renders as a `Type | Description` table. A single value may also be written inline as one object: `returns: { type = "<type>", desc = "<description>" }`.
 - **The signature is generated** from `name` + `params` in declared order; you never write it. Optional params get a `?` suffix; a varargs param named `...` is shown as-is (e.g. `Printf(chatframe?, format, ...)`); a union argument is expressed by naming the param accordingly (e.g. `prototype|lib`).
 - Optional fields: `title:` overrides the heading text; `kind: callback` switches the badge and is used for callbacks/events.
-- The body (after `---`) is plain markdown: description first, then any `lua` examples.
+- **The body has up to two `---`-separated parts.** The first `---` separates the header (above) from the markdown description. An optional **second `---`** marks an example: the `lua` block after it is pulled out and rendered **last**, after the parameter/return tables, under an **Example** heading. Methods that need no example just omit the second `---`. Don't add an example that only restates the signature.
 
-A block renders to a Lua-highlighted signature, a method/callback badge, a `Parameter | Type | Default | Description` table, and a `Type | Description` returns table.
+A block renders to a Lua-highlighted signature, a method/callback badge, a `Parameter | Type | Default | Description` table, a `Type | Description` returns table, and (when a second `---` is present) the example under an **Example** heading.
 
 ### Conventions
 

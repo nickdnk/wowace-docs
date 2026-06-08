@@ -6,7 +6,9 @@ description: "Register for and respond to game events and inter-addon messages w
 
 <Embeddable />
 
-AceEvent-3.0 provides event registration and secure dispatching. All dispatching is done using [CallbackHandler-1.0](/api/callback-handler). AceEvent is a simple wrapper around CallbackHandler, and dispatches all game events or addon message to the registrees.
+AceEvent-3.0 provides event registration and secure dispatching. All dispatching is done
+using [CallbackHandler-1.0](/api/callback-handler). AceEvent is a simple wrapper around CallbackHandler, and dispatches
+all game events or addon message to the registrees.
 
 ## Usage
 

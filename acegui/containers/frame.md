@@ -6,11 +6,13 @@ description: "The AceGUI-3.0 Frame container: a movable, resizable top-level win
 
 A movable, resizable top-level window with a title bar, a status bar, and a Close button.
 
-Create with `AceGUI:Create("Frame")`. This is a **container**; it inherits the [Common Widget API and container methods](/acegui/widget-api) (`AddChild`, `SetLayout`, `ReleaseChildren`, etc.).
+Create with `AceGUI:Create("Frame")`. This is a **container**; it inherits
+the [Common Widget API and container methods](/acegui/widget-api) (`AddChild`, `SetLayout`, `ReleaseChildren`, etc.).
 
-**Widget type:** `Frame` · **Version:** 30
+**Widget type:** `Frame`
 
 ## Methods
+
 ````apimethod
 name: container:SetTitle
 params:
@@ -62,6 +64,7 @@ Hide the underlying frame. (Hiding fires [`OnClose`](#onclose); see Callbacks.)
 ````
 
 ## Callbacks
+
 ````apimethod
 name: OnShow
 kind: callback
@@ -92,9 +95,12 @@ Fired when the mouse leaves the status-bar region.
 
 ## Layout notes
 
-Like all containers, the frame defaults to the `"List"` layout; switch with `SetLayout` (commonly `"Flow"`). The content region is inset from the frame edges (34 px horizontally, 57 px vertically) to leave room for the title bar, status bar, and Close button. The frame is movable by dragging the title bar and resizable via the grips; minimum size is 400×200.
+Like all containers, the frame defaults to the `"List"` layout; switch with `SetLayout` (commonly `"Flow"`). The content
+region is inset from the frame edges (34 px horizontally, 57 px vertically) to leave room for the title bar, status bar,
+and Close button. The frame is movable by dragging the title bar and resizable via the grips; minimum size is 400×200.
 
 ## Example
+
 ```lua
 local frame = AceGUI:Create("Frame")
 frame:SetTitle("My Addon")

@@ -4,15 +4,21 @@ description: "AceDB-3.0 manages your addon's SavedVariables with profiles, smart
 
 # AceDB-3.0
 
-AceDB-3.0 manages the `SavedVariables` of your addon. It offers profile management, smart defaults and namespaces for modules.
+AceDB-3.0 manages the `SavedVariables` of your addon. It offers profile management, smart defaults and namespaces for
+modules.
 
-Creating a new Database using the [`:New`](#new) function will return a new `DBObject`. A database will inherit all functions of the `DBObjectLib` listed here.
+Creating a new Database using the [`:New`](#new) function will return a new `DBObject`. A database will inherit all
+functions of the `DBObjectLib` listed here.
 
-If you create a new namespaced child-database ([`:RegisterNamespace`](#registernamespace)), you'll get a `DBObject` as well, but note that the child-databases cannot individually change their profile, and are linked to their parents profile - and because of that, the profile related APIs are not available. Only [`:RegisterDefaults`](#registerdefaults) and [`:ResetProfile`](#resetprofile) are available on child-databases.
+If you create a new namespaced child-database ([`:RegisterNamespace`](#registernamespace)), you'll get a `DBObject` as
+well, but note that the child-databases cannot individually change their profile, and are linked to their parents
+profile - and because of that, the profile related APIs are not available. Only [`:RegisterDefaults`](#registerdefaults)
+and [`:ResetProfile`](#resetprofile) are available on child-databases.
 
 ## Tutorial
 
-This walk-through covers the core concepts (profiles, smart defaults and namespaces) with examples. For exact method signatures and parameters, follow the links into the [API reference](#api-reference) below.
+This walk-through covers the core concepts (profiles, smart defaults and namespaces) with examples. For exact method
+signatures and parameters, follow the links into the [API reference](#api-reference) below.
 
 ### Getting Started
 
@@ -25,7 +31,9 @@ First, declare the `SavedVariables` table in your addon's `.toc` file:
 Then create the database object with [`:New`](#new), passing the name of that table.
 
 ::: warning
-You must create the database **after** the [`ADDON_LOADED`](https://warcraft.wiki.gg/wiki/ADDON_LOADED) event has fired for your addon (that is, in [`OnInitialize`](/api/ace-addon#oninitialize)); otherwise the table you read will be replaced when the real `SavedVariables` loads.
+You must create the database **after** the [`ADDON_LOADED`](https://warcraft.wiki.gg/wiki/ADDON_LOADED) event has fired
+for your addon (that is, in [`OnInitialize`](/api/ace-addon#oninitialize)); otherwise the table you read will be
+replaced when the real `SavedVariables` loads.
 :::
 
 ```lua
@@ -38,7 +46,8 @@ end
 
 ### Accessing & Storing Data
 
-A database object exposes its data through several scopes (see [Scopes](#scopes) below). The most commonly used is `profile`, which lets each character choose which named profile is active.
+A database object exposes its data through several scopes (see [Scopes](#scopes) below). The most commonly used is
+`profile`, which lets each character choose which named profile is active.
 
 Reading and writing is just plain table access; you can store strings, numbers, or whole nested tables:
 
@@ -57,7 +66,9 @@ To organize your settings, nest tables however you like; they behave like any ot
 
 ### Defaults
 
-Defaults are defined as a table laid out exactly like you want your database to look. You pass them to [`:New`](#new) as the second argument (or set them later with [`:RegisterDefaults`](#registerdefaults)). Because one defaults table covers every scope at once, the top-level keys are the scope names (`profile`, `char`, `global`, ...).
+Defaults are defined as a table laid out exactly like you want your database to look. You pass them to [`:New`](#new) as
+the second argument (or set them later with [`:RegisterDefaults`](#registerdefaults)). Because one defaults table covers
+every scope at once, the top-level keys are the scope names (`profile`, `char`, `global`, ...).
 
 ```lua
 local defaults = {
@@ -76,7 +87,8 @@ function AceDBExample:OnInitialize()
 end
 ```
 
-Defaults are served transparently when a key has not been set, and they are never written to the `SavedVariables` file, so users only persist values they have actually changed.
+Defaults are served transparently when a key has not been set, and they are never written to the `SavedVariables` file,
+so users only persist values they have actually changed.
 
 #### Smart Defaults
 
@@ -101,9 +113,12 @@ local defaults = {
 }
 ```
 
-With these defaults, reading `self.db.profile.modules.moduleA.enabled` returns `true`: `moduleA` was never declared, so it inherits the `['*']` table. Keys that *are* explicitly defined (like `moduleB`) do **not** inherit anything from `['*']`.
+With these defaults, reading `self.db.profile.modules.moduleA.enabled` returns `true`: `moduleA` was never declared, so
+it inherits the `['*']` table. Keys that *are* explicitly defined (like `moduleB`) do **not** inherit anything from
+`['*']`.
 
-The second magic key is `['**']`. It works like `['*']`, except it is **also inherited by the sibling keys in the same table**:
+The second magic key is `['**']`. It works like `['*']`, except it is **also inherited by the sibling keys in the same
+table**:
 
 ```lua
 local defaults = {
@@ -122,19 +137,25 @@ local defaults = {
 }
 ```
 
-Here `visible` is commented out of `moduleB`, yet `self.db.profile.modules.moduleB.visible` still returns `true`, because the explicitly-defined `moduleB` inherits the missing field from `['**']`.
+Here `visible` is commented out of `moduleB`, yet `self.db.profile.modules.moduleB.visible` still returns `true`,
+because the explicitly-defined `moduleB` inherits the missing field from `['**']`.
 
 ::: tip
-The difference is subtle but important: `['*']` only fills in *undefined* sibling keys, while `['**']` is also merged into *defined* siblings. Use `['**']` when you want every entry to share a base set of fields.
+The difference is subtle but important: `['*']` only fills in *undefined* sibling keys, while `['**']` is also merged
+into *defined* siblings. Use `['**']` when you want every entry to share a base set of fields.
 :::
 
-A `['*']` value can also be a plain value rather than a table; for example `['*'] = false` for a table that tracks which modules are enabled, with an explicit `true` for the ones that are on.
+A `['*']` value can also be a plain value rather than a table; for example `['*'] = false` for a table that tracks which
+modules are enabled, with an explicit `true` for the ones that are on.
 
 ### Reacting to Profile Changes
 
-When the active profile changes, the values behind `self.db.profile` change too, so anything you derived from those settings (frame positions, visibility, options panels) needs to be refreshed. AceDB tells you this happened through callbacks, fired via [CallbackHandler-1.0](/api/callback-handler).
+When the active profile changes, the values behind `self.db.profile` change too, so anything you derived from those
+settings (frame positions, visibility, options panels) needs to be refreshed. AceDB tells you this happened through
+callbacks, fired via [CallbackHandler-1.0](/api/callback-handler).
 
-Three callbacks all signal "the active profile changed": the user switched profiles, copied a profile into the active one, or reset it. Register the same handler for all three:
+Three callbacks all signal "the active profile changed": the user switched profiles, copied a profile into the active
+one, or reset it. Register the same handler for all three:
 
 ```lua
 function MyAddon:OnInitialize()
@@ -150,7 +171,8 @@ end
 ```
 
 ::: tip
-Every addon that uses profiles should handle these three callbacks for a smooth, consistent transition whenever the active profile changes.
+Every addon that uses profiles should handle these three callbacks for a smooth, consistent transition whenever the
+active profile changes.
 :::
 
 For the complete list of callbacks and their arguments, see the [Callbacks](#callbacks) section below.
@@ -164,20 +186,34 @@ Data can be saved in different scopes, depending on its intended usage. The foll
 - `class`: Class-specific data. All of the players characters of the same class share this database.
 - `race`: Race-specific data. All of the players characters of the same race share this database.
 - `faction`: Faction-specific data. All of the players characters of the same faction share this database.
-- `factionrealm`: Faction and realm specific data. All of the players characters on the same realm and of the same faction share this database.
+- `factionrealm`: Faction and realm specific data. All of the players characters on the same realm and of the same
+  faction share this database.
 - `locale`: Locale specific data, based on the locale of the players game client.
 - `global`: Global Data. All characters on the same account share this database.
-- `profile`: Profile-specific data, and the most commonly used scope. All characters using the same profile share this database; the user can choose the active profile and manage the profiles of all of their characters.
+- `profile`: Profile-specific data, and the most commonly used scope. All characters using the same profile share this
+  database; the user can choose the active profile and manage the profiles of all of their characters.
 
-Each of these is a **live view into the saved table for the relevant key**. You read and write them like ordinary Lua tables and AceDB persists the correct slice automatically.
+Each of these is a **live view into the saved table for the relevant key**. You read and write them like ordinary Lua
+tables and AceDB persists the correct slice automatically.
 
 Profiles work a little differently, because the user can switch which one is active:
 
-- **`db.profile`** is the table of the **currently active profile**: the one whose name [`:GetCurrentProfile`](#getcurrentprofile) returns. This is what your addon reads and writes for ordinary settings (`db.profile.fontSize = 12`).
-- Which profile is active is tracked **per character**: AceDB keeps a `character → profile name` map in the SavedVariables, so every character remembers its own choice. A character with no stored choice falls back to the default profile: the `defaultProfile` you passed to [`:New`](#new) (`"Default"` if you passed `true`), or a character-specific profile if you passed nothing.
-- **`db.profiles`** is the table of **all** profiles, keyed by profile name (every profile that exists in the database, shared across the account). [`:GetProfiles`](#getprofiles) lists their names; [`:SetProfile`](#setprofile) switches the active one (creating it if the name is new), which re-points `db.profile` at that profile's table and stores the choice for the current character. [`:CopyProfile`](#copyprofile), [`:DeleteProfile`](#deleteprofile) and [`:ResetProfile`](#resetprofile) manage them. Changing the profile fires the [profile callbacks](#callbacks) so your addon can re-apply settings.
+- **`db.profile`** is the table of the **currently active profile**: the one whose name
+  [`:GetCurrentProfile`](#getcurrentprofile) returns. This is what your addon reads and writes for ordinary settings (
+  `db.profile.fontSize = 12`).
+- Which profile is active is tracked **per character**: AceDB keeps a `character → profile name` map in the
+  SavedVariables, so every character remembers its own choice. A character with no stored choice falls back to the
+  default profile: the `defaultProfile` you passed to [`:New`](#new) (`"Default"` if you passed `true`), or a
+  character-specific profile if you passed nothing.
+- **`db.profiles`** is the table of **all** profiles, keyed by profile name (every profile that exists in the database,
+  shared across the account). [`:GetProfiles`](#getprofiles) lists their names; [`:SetProfile`](#setprofile) switches
+  the active one (creating it if the name is new), which re-points `db.profile` at that profile's table and stores the
+  choice for the current character. [`:CopyProfile`](#copyprofile), [`:DeleteProfile`](#deleteprofile) and
+  [`:ResetProfile`](#resetprofile) manage them. Changing the profile fires the [profile callbacks](#callbacks) so your
+  addon can re-apply settings.
 
-So in a typical addon, `self.db.profile` is "the user's current settings", `self.db.profiles` is "every saved settings set", and the active selection is remembered separately for each character.
+So in a typical addon, `self.db.profile` is "the user's current settings", `self.db.profiles` is "every saved settings
+set", and the active selection is remembered separately for each character.
 
 ## API Reference
 

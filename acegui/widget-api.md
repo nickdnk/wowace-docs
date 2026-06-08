@@ -4,9 +4,11 @@ description: "The Common Widget API shared by every AceGUI-3.0 widget and contai
 
 # Common Widget API
 
-Every [AceGUI-3.0](/acegui/) widget inherits a common set of methods from `WidgetBase`. Containers inherit an additional set from `WidgetContainerBase` (which itself extends `WidgetBase`).
+Every [AceGUI-3.0](/acegui/) widget inherits a common set of methods from `WidgetBase`. Containers inherit an additional
+set from `WidgetContainerBase` (which itself extends `WidgetBase`).
 
-The per-widget pages in this section document **only the methods and callbacks specific to that widget**; the methods below are available on *every* widget and are not repeated there.
+The per-widget pages in this section document **only the methods and callbacks specific to that widget**; the methods
+below are available on *every* widget and are not repeated there.
 
 ## Widget Methods
 
@@ -262,7 +264,11 @@ When `adjust` is truthy (the default), the container automatically resizes its h
 
 ## Internal hooks
 
-These are optional members a **widget implementation** may define; AceGUI calls them for you. Addon authors don't call or register them (consume widgets through their public methods); they matter when you build a custom widget. [`OnAcquire`](#onacquire) and [`OnRelease`](#onrelease) are driven by the [widget pool](/acegui/#frame-pooling); [`OnWidthSet`](#onwidthset) / [`OnHeightSet`](#onheightset) by sizing; and [`LayoutFinished`](#layoutfinished) by the layout pass.
+These are optional members a **widget implementation** may define; AceGUI calls them for you. Addon authors don't call
+or register them (consume widgets through their public methods); they matter when you build a custom widget.
+[`OnAcquire`](#onacquire) and [`OnRelease`](#onrelease) are driven by the [widget pool](/acegui/#frame-pooling);
+[`OnWidthSet`](#onwidthset) / [`OnHeightSet`](#onheightset) by sizing; and [`LayoutFinished`](#layoutfinished) by the
+layout pass.
 
 ````apimethod
 name: widget:OnAcquire

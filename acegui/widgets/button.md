@@ -4,13 +4,15 @@ description: "The AceGUI-3.0 Button widget: a graphical push button built on Bli
 
 # Button
 
-A graphical push button built on Blizzard's [`UIPanelButtonTemplate`](https://warcraft.wiki.gg/wiki/UIPanelButtonTemplate).
+A graphical push button built on Blizzard's
+[`UIPanelButtonTemplate`](https://warcraft.wiki.gg/wiki/UIPanelButtonTemplate).
 
 Create with `AceGUI:Create("Button")`. It inherits the [Common Widget API](/acegui/widget-api).
 
-**Widget type:** `Button` · **Version:** 24
+**Widget type:** `Button`
 
 ## Methods
+
 ````apimethod
 name: widget:SetText
 params:
@@ -40,6 +42,7 @@ Enables or disables the button. A disabled button cannot be clicked and is greye
 On acquire the button resets to: height 24, width 200, not disabled, auto-width off, and empty text.
 
 ## Callbacks
+
 ````apimethod
 name: OnClick
 kind: callback
@@ -64,6 +67,7 @@ Fired when the mouse leaves the button. Subscribe with `widget:SetCallback`.
 ````
 
 ## Example
+
 ```lua
 local btn = AceGUI:Create("Button")
 btn:SetText("Apply")

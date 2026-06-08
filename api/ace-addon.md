@@ -4,7 +4,9 @@ description: "AceAddon-3.0 provides a template for creating addon objects, with 
 
 # AceAddon-3.0
 
-AceAddon-3.0 provides a template for creating addon objects. It gives you a set of lifecycle callbacks ([`OnInitialize`](#oninitialize), [`OnEnable`](#onenable), [`OnDisable`](#ondisable)) that simplify the loading process of your addon; see [Callbacks](#callbacks).
+AceAddon-3.0 provides a template for creating addon objects. It gives you a set of lifecycle callbacks
+([`OnInitialize`](#oninitialize), [`OnEnable`](#onenable), [`OnDisable`](#ondisable)) that simplify the loading process
+of your addon; see [Callbacks](#callbacks).
 
 ## Usage
 
@@ -24,7 +26,8 @@ MyAddon = LibStub("AceAddon-3.0"):NewAddon("MyAddon", "AceConsole-3.0")
 
 ### Mixins vs. on-demand libraries
 
-The extra arguments to [`:NewAddon`](#newaddon) (and [`:NewModule`](#newmodule)) are libraries to **mix in** (embed). Embedding copies that library's methods onto your addon object, so you call them on `self`:
+The extra arguments to [`:NewAddon`](#newaddon) (and [`:NewModule`](#newmodule)) are libraries to **mix in** (embed).
+Embedding copies that library's methods onto your addon object, so you call them on `self`:
 
 ```lua
 local MyAddon = LibStub("AceAddon-3.0"):NewAddon("MyAddon", "AceEvent-3.0", "AceConsole-3.0")
@@ -35,7 +38,8 @@ function MyAddon:OnEnable()
 end
 ```
 
-The library uses your addon as its `self`, so it tracks registrations *per addon*, and AceAddon automatically cleans them up when your addon is disabled (events unregistered, hooks removed, timers cancelled).
+The library uses your addon as its `self`, so it tracks registrations *per addon*, and AceAddon automatically cleans
+them up when your addon is disabled (events unregistered, hooks removed, timers cancelled).
 
 Contrast this with grabbing a library **on demand** via `LibStub`, which returns the single shared library object:
 
@@ -47,21 +51,34 @@ AceEvent.RegisterEvent(MyAddon, "PLAYER_REGEN_DISABLED")
 
 #### The `:Embed` method
 
-Every embeddable library has an `:Embed(target)` method that copies its methods onto the table you pass, so you can then call them on that table.
+Every embeddable library has an `:Embed(target)` method that copies its methods onto the table you pass, so you can then
+call them on that table.
 
-You normally never call it yourself. Listing a library in [`:NewAddon`](#newaddon) or [`:NewModule`](#newmodule) calls `:Embed` on your addon for you, and the copying is identical either way. The reason to let AceAddon do it is **cleanup**: AceAddon knows when your addon is enabled and disabled, so it can tell each embedded library to tear down its registrations (events, hooks, timers) when the addon is disabled. A table you embed into by hand is not an addon AceAddon manages, so nothing cleans it up.
+You normally never call it yourself. Listing a library in [`:NewAddon`](#newaddon) or [`:NewModule`](#newmodule) calls
+`:Embed` on your addon for you, and the copying is identical either way. The reason to let AceAddon do it is **cleanup
+**: AceAddon knows when your addon is enabled and disabled, so it can tell each embedded library to tear down its
+registrations (events, hooks, timers) when the addon is disabled. A table you embed into by hand is not an addon
+AceAddon manages, so nothing cleans it up.
 
-In short: use `:NewAddon`/`:NewModule` to embed; call `:Embed` directly only to add a library's methods to an object that isn't an Ace addon.
+In short: use `:NewAddon`/`:NewModule` to embed; call `:Embed` directly only to add a library's methods to an object
+that isn't an Ace addon.
 
-Use mixins for the embeddable libraries you call throughout your addon (**AceConsole, AceEvent, AceBucket, AceHook, AceComm, AceTimer, AceSerializer**): it's less typing and you get automatic cleanup. Libraries that produce their own objects or tables (**AceDB**, **AceConfig**/**AceConfigDialog**, **AceGUI**, **AceLocale**, **AceDBOptions**) are not embeddable; fetch them with `LibStub(...)` when you need them.
+Use mixins for the embeddable libraries you call throughout your addon (**AceConsole, AceEvent, AceBucket, AceHook,
+AceComm, AceTimer, AceSerializer**): it's less typing and you get automatic cleanup. Libraries that produce their own
+objects or tables (**AceDB**, **AceConfig**/**AceConfigDialog**, **AceGUI**, **AceLocale**, **AceDBOptions**) are not
+embeddable; fetch them with `LibStub(...)` when you need them.
 
 ::: tip
-For modules, [`:SetDefaultModuleLibraries`](#setdefaultmodulelibraries) lets you embed the same set of libraries into every module the addon creates, without repeating them on each [`:NewModule`](#newmodule) call.
+For modules, [`:SetDefaultModuleLibraries`](#setdefaultmodulelibraries) lets you embed the same set of libraries into
+every module the addon creates, without repeating them on each [`:NewModule`](#newmodule) call.
 :::
 
 ### Standard methods
 
-AceAddon calls up to three lifecycle callbacks on your addon object: [`OnInitialize`](#oninitialize), [`OnEnable`](#onenable) and [`OnDisable`](#ondisable). [`OnInitialize`](#oninitialize) runs once at load; [`OnEnable`](#onenable)/[`OnDisable`](#ondisable) may run multiple times without a full UI reload. The [Example](#example) below uses all three.
+AceAddon calls up to three lifecycle callbacks on your addon object: [`OnInitialize`](#oninitialize),
+[`OnEnable`](#onenable) and [`OnDisable`](#ondisable). [`OnInitialize`](#oninitialize) runs once at load;
+[`OnEnable`](#onenable)/[`OnDisable`](#ondisable) may run multiple times without a full UI reload.
+The [Example](#example) below uses all three.
 
 ## Example
 
@@ -440,7 +457,9 @@ MyAddon = LibStub("AceAddon-3.0"):NewAddon(MyFrame, "MyAddon", "AceEvent-3.0")
 
 ## Callbacks
 
-AceAddon calls these lifecycle methods on your addon (and module) objects if you define them. They aren't fired through CallbackHandler; you simply declare them as methods on the object returned by [`:NewAddon`](#newaddon)/[`:NewModule`](#newmodule).
+AceAddon calls these lifecycle methods on your addon (and module) objects if you define them. They aren't fired through
+CallbackHandler; you simply declare them as methods on the object returned by
+[`:NewAddon`](#newaddon)/[`:NewModule`](#newmodule).
 
 ````apimethod
 name: MyAddon:OnInitialize

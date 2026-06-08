@@ -6,11 +6,13 @@ description: "The AceGUI-3.0 ScrollFrame container: a plain container that scrol
 
 A container that scrolls its content vertically and does not grow in height.
 
-Create with `AceGUI:Create("ScrollFrame")`. This is a **container**; it inherits the [Common Widget API and container methods](/acegui/widget-api) (`AddChild`, `SetLayout`, `ReleaseChildren`, etc.).
+Create with `AceGUI:Create("ScrollFrame")`. This is a **container**; it inherits
+the [Common Widget API and container methods](/acegui/widget-api) (`AddChild`, `SetLayout`, `ReleaseChildren`, etc.).
 
-**Widget type:** `ScrollFrame` · **Version:** 26
+**Widget type:** `ScrollFrame`
 
 ## Methods
+
 ````apimethod
 name: container:SetScroll
 params:
@@ -47,9 +49,15 @@ This container fires no callbacks of its own.
 
 ## Layout notes
 
-Like all containers, the ScrollFrame defaults to the `"List"` layout; switch with `SetLayout` (commonly `"Flow"`). Unlike auto-growing groups, ScrollFrame keeps a fixed visible size and scrolls its content vertically; the content height comes from the layout (`LayoutFinished`) while the frame's own height remains unchanged. A vertical scroll bar appears only when content overflows, automatically reserving 20 px of width when shown. Mouse-wheel scrolling is enabled. Give the ScrollFrame a fixed or full height (for example, via a parent layout) so there is a defined viewport to scroll within.
+Like all containers, the ScrollFrame defaults to the `"List"` layout; switch with `SetLayout` (commonly `"Flow"`).
+Unlike auto-growing groups, ScrollFrame keeps a fixed visible size and scrolls its content vertically; the content
+height comes from the layout (`LayoutFinished`) while the frame's own height remains unchanged. A vertical scroll bar
+appears only when content overflows, automatically reserving 20 px of width when shown. Mouse-wheel scrolling is
+enabled. Give the ScrollFrame a fixed or full height (for example, via a parent layout) so there is a defined viewport
+to scroll within.
 
 ## Example
+
 ```lua
 local scroll = AceGUI:Create("ScrollFrame")
 scroll:SetFullWidth(true)

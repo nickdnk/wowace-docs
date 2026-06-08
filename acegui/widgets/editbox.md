@@ -4,13 +4,15 @@ description: "The AceGUI-3.0 EditBox widget: a single-line text input with an op
 
 # EditBox
 
-A single-line text input built on [`InputBoxTemplate`](https://warcraft.wiki.gg/wiki/Widget_API), with an optional label and an accept button (`"OK"`). Supports drag-and-drop of items, spells, macros, and chat-link insertion.
+A single-line text input built on [`InputBoxTemplate`](https://warcraft.wiki.gg/wiki/Widget_API), with an optional label
+and an accept button (`"OK"`). Supports drag-and-drop of items, spells, macros, and chat-link insertion.
 
 Create with `AceGUI:Create("EditBox")`. It inherits the [Common Widget API](/acegui/widget-api).
 
-**Widget type:** `EditBox` · **Version:** 29
+**Widget type:** `EditBox`
 
 ## Methods
+
 ````apimethod
 name: widget:SetText
 params:
@@ -81,9 +83,11 @@ Enables or disables the input. A disabled box ignores the mouse, drops focus, an
 
 ## Defaults
 
-On acquire the widget resets to: width 200, not disabled, no label, empty text, accept button enabled, and no max-letter limit. On release it clears focus.
+On acquire the widget resets to: width 200, not disabled, no label, empty text, accept button enabled, and no max-letter
+limit. On release it clears focus.
 
 ## Callbacks
+
 ````apimethod
 name: OnEnterPressed
 kind: callback
@@ -117,6 +121,7 @@ Fired when the mouse leaves the input. Subscribe with `widget:SetCallback`.
 ````
 
 ## Example
+
 ```lua
 local eb = AceGUI:Create("EditBox")
 eb:SetLabel("Player name")

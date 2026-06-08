@@ -8,11 +8,15 @@ description: "AceTimer-3.0 is a central facility for registering one-shot and re
 
 AceTimer-3.0 provides a central facility for registering timers.
 
-AceTimer supports one-shot timers and repeating timers. All timers are stored in an efficient data structure that allows easy dispatching and fast rescheduling. Timers can be registered or canceled at any time, even from within a running timer, without conflict or large overhead.
+AceTimer supports one-shot timers and repeating timers. All timers are stored in an efficient data structure that allows
+easy dispatching and fast rescheduling. Timers can be registered or canceled at any time, even from within a running
+timer, without conflict or large overhead.
 
-AceTimer is currently limited to firing timers at a frequency of 0.01s as this is what the WoW timer API restricts us to.
+AceTimer is currently limited to firing timers at a frequency of 0.01s as this is what the WoW timer API restricts us
+to.
 
-All `:Schedule` functions will return a handle to the current timer, which you will need to store if you need to cancel the timer you just registered.
+All `:Schedule` functions will return a handle to the current timer, which you will need to store if you need to cancel
+the timer you just registered.
 
 ## API Reference
 

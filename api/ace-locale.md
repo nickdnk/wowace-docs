@@ -4,13 +4,15 @@ description: "AceLocale-3.0 manages addon localization, letting you register mul
 
 # AceLocale-3.0
 
-AceLocale-3.0 manages localization in addons, allowing for multiple locale to be registered with fallback to the base locale for untranslated strings.
+AceLocale-3.0 manages localization in addons, allowing for multiple locale to be registered with fallback to the base
+locale for untranslated strings.
 
 ## Usage
 
 ### Registering translations
 
-Create one Lua file per locale and list it in the `.toc` **before** your main code (see the [Getting Started](/getting-started) load-order note). Fetch a locale table at the top:
+Create one Lua file per locale and list it in the `.toc` **before** your main code (see
+the [Getting Started](/getting-started) load-order note). Fetch a locale table at the top:
 
 ```lua
 -- enUS.lua (default locale)
@@ -21,7 +23,8 @@ if L then
 end
 ```
 
-The third argument marks the default locale (usually `true` for `enUS`, `false` elsewhere). [`:NewLocale`](#newlocale) returns `nil` if that locale isn't needed for the current client, so guard with `if L then`.
+The third argument marks the default locale (usually `true` for `enUS`, `false` elsewhere). [`:NewLocale`](#newlocale)
+returns `nil` if that locale isn't needed for the current client, so guard with `if L then`.
 
 #### Default locale: explicit values vs. the `true` shorthand
 
@@ -35,9 +38,11 @@ local L = LibStub("AceLocale-3.0"):NewLocale("MyAddon", "enUS", true)
 L["HELLO"] = "Hello!"
 ```
 
-`L["HELLO"]` returns `"Hello!"`. Because the displayed text lives only in the value, you can fix the English wording (`"Hello!"` → `"Hi!"`) without changing the key, so no other locale file and no code referencing `L["HELLO"]` breaks.
+`L["HELLO"]` returns `"Hello!"`. Because the displayed text lives only in the value, you can fix the English wording (
+`"Hello!"` → `"Hi!"`) without changing the key, so no other locale file and no code referencing `L["HELLO"]` breaks.
 
-**`true` shorthand.** Assigning `true` tells AceLocale to use the key *itself* as the value, so you write the English text once, as the key:
+**`true` shorthand.** Assigning `true` tells AceLocale to use the key *itself* as the value, so you write the English
+text once, as the key:
 
 ```lua
 -- enUS.lua (default locale)
@@ -45,10 +50,14 @@ local L = LibStub("AceLocale-3.0"):NewLocale("MyAddon", "enUS", true)
 L["Hello!"] = true
 ```
 
-`L["Hello!"]` returns `"Hello!"`. This is only valid in the default locale (it's how AceLocale avoids you typing the string twice). The cost: the key *is* the English text, so every other locale must key off `"Hello!"` and your code must call `L["Hello!"]`. Correcting the English wording changes the key, breaking every lookup and translation that referenced the old text.
+`L["Hello!"]` returns `"Hello!"`. This is only valid in the default locale (it's how AceLocale avoids you typing the
+string twice). The cost: the key *is* the English text, so every other locale must key off `"Hello!"` and your code must
+call `L["Hello!"]`. Correcting the English wording changes the key, breaking every lookup and translation that
+referenced the old text.
 
 ::: tip
-Both are valid; prefer **constant keys with explicit values** for anything you may reword later. The `true` shorthand is convenient for short, stable strings where the English text is unlikely to change.
+Both are valid; prefer **constant keys with explicit values** for anything you may reword later. The `true` shorthand is
+convenient for short, stable strings where the English text is unlikely to change.
 :::
 
 ### Using translations
