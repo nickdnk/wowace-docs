@@ -200,9 +200,9 @@ function expandApiMethods(src: string): string {
   })
 }
 
-// Deployed site URL, used for the sitemap and social-card (Open Graph) tags.
-// TODO: change this to the real hosted URL once known.
-const SITE_URL = 'https://nickdnk.github.io/wowace-docs'
+// Deployed site URL, used for the sitemap, canonical links and social-card
+// (Open Graph) tags.
+const SITE_URL = 'https://wowace-docs.nickdnk.workers.dev'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -218,6 +218,9 @@ export default defineConfig({
   scrollOffset: { selector: ['header.VPNav', '.VPLocalNav'], padding: 16 },
   lastUpdated: true,
   cleanUrls: true,
+  // Don't build these into the site: the old reference dump, the Ace3 submodule
+  // source, and repo docs that aren't site pages.
+  srcExclude: ['legacy_docs/**', 'Ace3/**', 'README.md', 'CLAUDE.md'],
   appearance: 'dark',
   sitemap: { hostname: SITE_URL },
   head: [
