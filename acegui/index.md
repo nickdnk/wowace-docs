@@ -36,10 +36,6 @@ So instead of leaking a frame per redraw, you [`Create`](#create) widgets when y
 - Call [`container:ReleaseChildren`](/acegui/widget-api#releasechildren) before redrawing a group's contents, rather than creating new child widgets each time.
 - If you never release, the pool never gets anything back and your addon's frame usage grows just like manual `CreateFrame` would.
 
-::: warning
-Because widgets are recycled, **don't modify or hold on to a widget's underlying frame directly**: once released, that same frame may be handed to another addon, and unexpected changes will make it misbehave. Always go through the widget API.
-:::
-
 ### Widget lifecycle: OnAcquire & OnRelease
 
 Each widget type defines two internal lifecycle hooks that the pool drives:

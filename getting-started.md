@@ -6,13 +6,9 @@ description: "Build your first World of Warcraft addon on Ace3: set up the folde
 
 New to World of Warcraft addons? You're in the right place. This guide takes you from an empty folder to a working addon built on **Ace3**, and explains the pieces as it goes.
 
-## What is Ace3?
+## What is Ace3, and why use it?
 
-Ace3 is the most widely used **addon framework** for World of Warcraft: a collection of small, focused libraries that handle the repetitive, fiddly parts of addon development so you can concentrate on what your addon actually does.
-
-It isn't one big monolithic library. Each piece solves a single problem (saving settings, reacting to game events, building a configuration screen, drawing UI, scheduling timers) and you **embed only the ones you need**. Mix and match; ignore the rest.
-
-## Why use it?
+Ace3 is the most widely used **addon framework** for World of Warcraft: a collection of small, focused libraries that handle the repetitive, fiddly parts of addon development so you can concentrate on what your addon actually does. It isn't one big monolithic library; each piece solves a single problem (saving settings, reacting to game events, building a configuration screen, drawing UI, scheduling timers) and you **embed only the ones you need**. Mix and match; ignore the rest.
 
 Every addon author runs into the same chores: persisting `SavedVariables` across sessions and characters, wiring up and cleaning up event handlers, building an options panel, safely hooking Blizzard functions. Ace3 provides proven solutions for all of them, shared by thousands of addons:
 
@@ -20,7 +16,6 @@ Every addon author runs into the same chores: persisting `SavedVariables` across
 - **Settings that just work**: [AceDB-3.0](/api/ace-db) stores `SavedVariables` with per-character profiles and smart defaults.
 - **Configuration for free**: describe your options once and [AceConfig-3.0](/api/ace-config) builds both a settings GUI *and* slash commands from it.
 - **Automatic cleanup**: events, hooks and timers registered through Ace are torn down for you when your addon is disabled.
-- **Modular**: embed only the libraries you use; a tiny addon can use just one.
 
 If you're writing anything more than a throwaway script, Ace3 saves a lot of time and a lot of bugs. The rest of this page walks through setting up an addon and points you at the library you need for each task.
 
