@@ -10,6 +10,7 @@
     "docs:preview": "vitepress preview"
   },
   "devDependencies": {
-    "vitepress-plugin-group-icons": "^1.7.5"
+    "vitepress-plugin-group-icons": "^1.7.5",
+    "@types/node": "^25.9.2"
   }
 }

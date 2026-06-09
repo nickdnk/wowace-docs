@@ -47,7 +47,7 @@ function slugify(str: string): string {
 // Markdown-table cell helpers.
 const escCell = (s: string) => String(s).replace(/\|/g, '\\|')
 const typeCell = (t?: string) =>
-  t ? t.split('|').map((x) => '`' + x.trim() + '`').join(' \\| ') : ''
+  t ? t.split('|').map((x) => '`' + x.trim() + '`').join(' ') : ''
 
 // Parse a single Lua value: quoted string, boolean, number, or nil.
 function parseLuaValue(v: string): any {
@@ -66,7 +66,7 @@ function parseLuaValue(v: string): any {
 // Quote-aware comma splitting; values via parseLuaValue.
 function parseLuaTable(src: string): Record<string, any> {
   const obj: Record<string, any> = {}
-  let s = src.trim().replace(/^\{/, '').replace(/\}$/, '')
+  let s = src.trim().replace(/^{/, '').replace(/}$/, '')
   const parts: string[] = []
   let buf = '', q: string | null = null, esc = false
   for (const ch of s) {
@@ -81,7 +81,7 @@ function parseLuaTable(src: string): Record<string, any> {
   for (const part of parts) {
     const eq = part.indexOf('=')
     if (eq === -1) continue
-    const key = part.slice(0, eq).trim().replace(/^\[|\]$/g, '').replace(/^["']|["']$/g, '')
+    const key = part.slice(0, eq).trim().replace(/^\[|]$/g, '').replace(/^["']|["']$/g, '')
     obj[key] = parseLuaValue(part.slice(eq + 1))
   }
   return obj
@@ -205,10 +205,11 @@ function expandApiMethods(src: string): string {
 const SITE_URL = 'https://wowace-docs.nickdnk.workers.dev'
 
 // https://vitepress.dev/reference/site-config
+// noinspection JSUnusedGlobalSymbols
 export default defineConfig({
   lang: 'en-US',
   title: 'Ace3',
-  // Sub-page <title>s read e.g. "AceDB-3.0 | Ace3 Documentation"; the home page
+  // Sub-page <title> read e.g. "AceDB-3.0 | Ace3 Documentation"; the home page
   // overrides this with its own keyword-rich title (see index.md frontmatter).
   titleTemplate: ':title | Ace3 Documentation',
   description: 'Documentation for the Ace3 World of Warcraft addon framework',

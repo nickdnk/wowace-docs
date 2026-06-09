@@ -47,7 +47,7 @@ sense from a UI design perspective.
 Nearly all parameters can be **inherited** through the table tree. For example, you can define one `get` handler on a
 group, and all member nodes (and member nodes of sub-groups) will use it unless overridden.
 
-Currently inherited are: `set`, `get`, `func`, `confirm`, `validate`, `disabled`, `hidden`.
+Currently inherited are: `set`, `get`, `func`, `confirm`, `validate`, `disabled` and `hidden`.
 
 To declare that an inherited value is NOT to be used even though a parent has it, set it to `false`.
 
@@ -64,28 +64,28 @@ displaying the options, and the options table itself. See [Callback Arguments](#
 
 The following parameters apply to all types of nodes and groups, and control the general layout of the options.
 
-| Parameter          | Type                                    | Description                                                                                                                                                                                                                                                                                                                                                                          |
-|--------------------|-----------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `name`             | `string` \| `function`                  | Display name for the option.                                                                                                                                                                                                                                                                                                                                                         |
-| `desc`             | `string` \| `function`                  | Description for the option (or `nil` for a self-describing name).                                                                                                                                                                                                                                                                                                                    |
-| `descStyle`        | `string`                                | `"inline"` to show the description below the option in a GUI rather than as a tooltip. Currently only supported by AceGUI "Toggle".                                                                                                                                                                                                                                                  |
-| `tooltipHyperlink` | `string` \| `function`                  | A hyperlink embedded in the option's tooltip.                                                                                                                                                                                                                                                                                                                                        |
-| `validate`         | `methodname` \| `function` \| `false`   | Validate the input/value before setting it. Return a string (error message) to indicate an error.                                                                                                                                                                                                                                                                                    |
-| `confirm`          | `methodname` \| `function` \| `boolean` | Prompt for confirmation before changing a value. `true` displays "name - desc" (or `confirmText`); a function may return a prompt string, `true`, or `false` to skip confirmation.                                                                                                                                                                                                   |
-| `confirmText`      | `string`                                | Prompt text shown when `confirm` is `true`, overriding the default "name - desc".                                                                                                                                                                                                                                                                                                    |
-| `order`            | `number` \| `methodname` \| `function`  | Relative position of item (default = 100, `0` = first, `-1` = last).                                                                                                                                                                                                                                                                                                                 |
-| `disabled`         | `methodname` \| `function` \| `boolean` | Disabled but visible.                                                                                                                                                                                                                                                                                                                                                                |
-| `hidden`           | `methodname` \| `function` \| `boolean` | Hidden (but still usable if you can reach it, e.g. via commandline).                                                                                                                                                                                                                                                                                                                 |
-| `guiHidden`        | `boolean`                               | Hide this from graphical UIs (dialog, dropdown).                                                                                                                                                                                                                                                                                                                                     |
-| `dialogHidden`     | `boolean`                               | Hide this from dialog UIs.                                                                                                                                                                                                                                                                                                                                                           |
-| `dropdownHidden`   | `boolean`                               | Hide this from dropdown UIs.                                                                                                                                                                                                                                                                                                                                                         |
-| `cmdHidden`        | `boolean`                               | Hide this from the [command line](/api/ace-config-cmd) (the slash-command interface).                                                                                                                                                                                                                                                                                                |
-| `icon`             | `string` \| `number` \| `function`      | Icon texture for the option: a file path (string) or a fileDataID (number). Pass a function to compute it dynamically.                                                                                                                                                                                                                                                               |
-| `iconCoords`       | `table` \| `methodname` \| `function`   | Arguments to pass to [`SetTexCoord`](https://warcraft.wiki.gg/wiki/API_Texture_SetTexCoord), e.g. `{0.1, 0.9, 0.1, 0.9}`.                                                                                                                                                                                                                                                            |
-| `handler`          | `table`                                 | Object on which getter/setter functions are called if they are declared as strings (methodnames) rather than function references.                                                                                                                                                                                                                                                    |
-| `type`             | `string`                                | The option type: `"execute"`, `"input"`, `"group"`, etc. See [Item Types](#item-types).                                                                                                                                                                                                                                                                                              |
-| `width`            | `string` \| `number`                    | GUI hint for how wide the option should be (optional support). Default is `nil` (not set). Values: `"double"`/`"half"` to enlarge/shrink; `"full"` for the full window width; `"normal"` for the implementation's default width (useful to override widgets that default to `"full"`); or a number as a multiplier of the default width (e.g. `0.5` = `"half"`, `2.0` = `"double"`). |
-| `relWidth`         | `number`                                | Relative width, as a fraction of the available space.                                                                                                                                                                                                                                                                                                                                |
+| Parameter          | Type                              | Description                                                                                                                                                                                                                                                                                                                                                                          |
+|--------------------|-----------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `name`             | `string` `function`               | Display name for the option.                                                                                                                                                                                                                                                                                                                                                         |
+| `desc`             | `string` `function`               | Description for the option (or `nil` for a self-describing name).                                                                                                                                                                                                                                                                                                                    |
+| `descStyle`        | `string`                          | `"inline"` to show the description below the option in a GUI rather than as a tooltip. Currently only supported by AceGUI "Toggle".                                                                                                                                                                                                                                                  |
+| `tooltipHyperlink` | `string` `function`               | A hyperlink embedded in the option's tooltip.                                                                                                                                                                                                                                                                                                                                        |
+| `validate`         | `methodname` `function` `false`   | Validate the input/value before setting it. Return a string (error message) to indicate an error.                                                                                                                                                                                                                                                                                    |
+| `confirm`          | `methodname` `function` `boolean` | Prompt for confirmation before changing a value. `true` displays "name - desc" (or `confirmText`); a function may return a prompt string, `true`, or `false` to skip confirmation.                                                                                                                                                                                                   |
+| `confirmText`      | `string`                          | Prompt text shown when `confirm` is `true`, overriding the default "name - desc".                                                                                                                                                                                                                                                                                                    |
+| `order`            | `number` `methodname` `function`  | Relative position of item (default = 100, `0` = first, `-1` = last).                                                                                                                                                                                                                                                                                                                 |
+| `disabled`         | `methodname` `function` `boolean` | Disabled but visible.                                                                                                                                                                                                                                                                                                                                                                |
+| `hidden`           | `methodname` `function` `boolean` | Hidden (but still usable if you can reach it, e.g. via commandline).                                                                                                                                                                                                                                                                                                                 |
+| `guiHidden`        | `boolean`                         | Hide this from graphical UIs (dialog, dropdown).                                                                                                                                                                                                                                                                                                                                     |
+| `dialogHidden`     | `boolean`                         | Hide this from dialog UIs.                                                                                                                                                                                                                                                                                                                                                           |
+| `dropdownHidden`   | `boolean`                         | Hide this from dropdown UIs.                                                                                                                                                                                                                                                                                                                                                         |
+| `cmdHidden`        | `boolean`                         | Hide this from the [command line](/api/ace-config-cmd) (the slash-command interface).                                                                                                                                                                                                                                                                                                |
+| `icon`             | `string` `number` `function`      | Icon texture for the option: a file path (string) or a fileDataID (number). Pass a function to compute it dynamically.                                                                                                                                                                                                                                                               |
+| `iconCoords`       | `table` `methodname` `function`   | Arguments to pass to [`SetTexCoord`](https://warcraft.wiki.gg/wiki/API_Texture_SetTexCoord), e.g. `{0.1, 0.9, 0.1, 0.9}`.                                                                                                                                                                                                                                                            |
+| `handler`          | `table`                           | Object on which getter/setter functions are called if they are declared as strings (methodnames) rather than function references.                                                                                                                                                                                                                                                    |
+| `type`             | `string`                          | The option type: `"execute"`, `"input"`, `"group"`, etc. See [Item Types](#item-types).                                                                                                                                                                                                                                                                                              |
+| `width`            | `string` `number`                 | GUI hint for how wide the option should be (optional support). Default is `nil` (not set). Values: `"double"`/`"half"` to enlarge/shrink; `"full"` for the full window width; `"normal"` for the implementation's default width (useful to override widgets that default to `"full"`); or a number as a multiplier of the default width (e.g. `0.5` = `"half"`, `2.0` = `"double"`). |
+| `relWidth`         | `number`                          | Relative width, as a fraction of the available space.                                                                                                                                                                                                                                                                                                                                |
 
 ::: tip Note
 For conditional show/hide or enable/disable, use `hidden` and `disabled`: set either to a function (or methodname) and
@@ -99,25 +99,25 @@ it is called each time the option's state is checked. The UI-specific variants (
 
 Runs `func`. In a GUI this is a button; if `image` is set, it displays a clickable image instead of a default button.
 
-| Field         | Type                          | Description                                                                                                                                                      |
-|---------------|-------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `func`        | `function\|methodname`        | Function to execute.                                                                                                                                             |
-| `image`       | `string\|number\|function`    | Path to image texture; if a function, it may optionally return the image width and height as the 2nd and 3rd values, used instead of `imageWidth`/`imageHeight`. |
-| `imageCoords` | `table\|methodname\|function` | Arguments to pass to `SetTexCoord`, e.g. `{0.1, 0.9, 0.1, 0.9}`.                                                                                                 |
-| `imageWidth`  | `number`                      | Width of the displayed image.                                                                                                                                    |
-| `imageHeight` | `number`                      | Height of the displayed image.                                                                                                                                   |
+| Field         | Type                            | Description                                                                                                                                                      |
+|---------------|---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `func`        | `function` `methodname`         | Function to execute.                                                                                                                                             |
+| `image`       | `string` `number` `function`    | Path to image texture; if a function, it may optionally return the image width and height as the 2nd and 3rd values, used instead of `imageWidth`/`imageHeight`. |
+| `imageCoords` | `table` `methodname` `function` | Arguments to pass to [`SetTexCoord`](https://warcraft.wiki.gg/wiki/API_Texture_SetTexCoord), e.g. `{0.1, 0.9, 0.1, 0.9}`.                                        |
+| `imageWidth`  | `number`                        | Width of the displayed image.                                                                                                                                    |
+| `imageHeight` | `number`                        | Height of the displayed image.                                                                                                                                   |
 
 ### input
 
 A simple text input, with an optional validation pattern or function.
 
-| Field       | Type                   | Description                                                                                    |
-|-------------|------------------------|------------------------------------------------------------------------------------------------|
-| `get`       | `function\|methodname` | Getter function.                                                                               |
-| `set`       | `function\|methodname` | Setter function.                                                                               |
-| `multiline` | `boolean\|integer`     | If `true`, shown as a multiline editbox in dialog implementations (integer = number of lines). |
-| `pattern`   | `string`               | Optional validation pattern. (Use `validate` for more advanced checks.)                        |
-| `usage`     | `string`               | Usage string, displayed if the pattern mismatches and in console help messages.                |
+| Field       | Type                    | Description                                                                                    |
+|-------------|-------------------------|------------------------------------------------------------------------------------------------|
+| `get`       | `function` `methodname` | Getter function.                                                                               |
+| `set`       | `function` `methodname` | Setter function.                                                                               |
+| `multiline` | `boolean` `integer`     | If `true`, shown as a multiline editbox in dialog implementations (integer = number of lines). |
+| `pattern`   | `string`                | Optional validation pattern. (Use `validate` for more advanced checks.)                        |
+| `usage`     | `string`                | Usage string, displayed if the pattern mismatches and in console help messages.                |
 
 For checks a `pattern` can't express, use a `validate` function (a [common parameter](#common-parameters)). Return an
 error string to reject the value, or `true` to accept it:
@@ -143,32 +143,32 @@ maxTargets = {
 
 A simple checkbox.
 
-| Field         | Type                          | Description                                                                                                              |
-|---------------|-------------------------------|--------------------------------------------------------------------------------------------------------------------------|
-| `get`         | `function\|methodname`        | Getter function.                                                                                                         |
-| `set`         | `function\|methodname`        | Setter function.                                                                                                         |
-| `tristate`    | `boolean`                     | Make it a tri-state checkbox. Values cycle through unchecked (`false`), checked (`true`), greyed (`nil`), in that order. |
-| `image`       | `string\|number\|function`    | Optional image texture displayed next to the checkbox in a dialog UI.                                                    |
-| `imageCoords` | `table\|methodname\|function` | Arguments to pass to `SetTexCoord` for `image`, e.g. `{0.1, 0.9, 0.1, 0.9}`.                                             |
+| Field         | Type                            | Description                                                                                                                           |
+|---------------|---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
+| `get`         | `function` `methodname`         | Getter function.                                                                                                                      |
+| `set`         | `function` `methodname`         | Setter function.                                                                                                                      |
+| `tristate`    | `boolean`                       | Make it a tri-state checkbox. Values cycle through unchecked (`false`), checked (`true`), greyed (`nil`), in that order.              |
+| `image`       | `string` `number` `function`    | Optional image texture displayed next to the checkbox in a dialog UI.                                                                 |
+| `imageCoords` | `table` `methodname` `function` | Arguments to pass to [`SetTexCoord`](https://warcraft.wiki.gg/wiki/API_Texture_SetTexCoord) for `image`, e.g. `{0.1, 0.9, 0.1, 0.9}`. |
 
 ### range
 
 Configures a numeric value in a specific range. In a GUI, a slider.
 
-| Field       | Type                   | Description                                                                                               |
-|-------------|------------------------|-----------------------------------------------------------------------------------------------------------|
-| `min`       | `number`               | Minimum value.                                                                                            |
-| `max`       | `number`               | Maximum value.                                                                                            |
-| `softMin`   | `number`               | "Soft" minimum, used by the UI as a convenient limit while still allowing manual input up to `min`/`max`. |
-| `softMax`   | `number`               | "Soft" maximum, used by the UI as a convenient limit while still allowing manual input up to `min`/`max`. |
-| `step`      | `number`               | Step value used to validate numeric input (default = no stepping limit).                                  |
-| `bigStep`   | `number`               | A more generally-useful step size. Support in UIs is optional.                                            |
-| `get`       | `function\|methodname` | Getter function.                                                                                          |
-| `set`       | `function\|methodname` | Setter function.                                                                                          |
-| `isPercent` | `boolean`              | Represent e.g. `1.0` as `100%` (default `false`).                                                         |
+| Field       | Type                    | Description                                                                                               |
+|-------------|-------------------------|-----------------------------------------------------------------------------------------------------------|
+| `min`       | `number`                | Minimum value.                                                                                            |
+| `max`       | `number`                | Maximum value.                                                                                            |
+| `softMin`   | `number`                | "Soft" minimum, used by the UI as a convenient limit while still allowing manual input up to `min`/`max`. |
+| `softMax`   | `number`                | "Soft" maximum, used by the UI as a convenient limit while still allowing manual input up to `min`/`max`. |
+| `step`      | `number`                | Step value used to validate numeric input (default = no stepping limit).                                  |
+| `bigStep`   | `number`                | A more generally-useful step size. Support in UIs is optional.                                            |
+| `get`       | `function` `methodname` | Getter function.                                                                                          |
+| `set`       | `function` `methodname` | Setter function.                                                                                          |
+| `isPercent` | `boolean`               | Represent e.g. `1.0` as `100%` (default `false`).                                                         |
 
 ::: warning Note
-The `step` checking only works if you specify valid `min` and `max` values. Even when using `softMin`/`softMax`, `min`
+The `step` checking only works if you specify valid `min` and `max` values. Even when using `softMin`/`softMax` `min`
 and `max` are still required for `step` to function. If no `min` or `max` are specified, the manual input of the range
 control will accept any and all values.
 :::
@@ -177,26 +177,26 @@ control will accept any and all values.
 
 Only one value can be selected. In a dropdown UI this is likely a radio group; in a dialog, likely a combobox.
 
-| Field         | Type                   | Description                                                                              |
-|---------------|------------------------|------------------------------------------------------------------------------------------|
-| `values`      | `table\|function`      | `[key]=value` pair table; the key is passed to `set`, the value is the string displayed. |
-| `sorting`     | `table\|function`      | Optional array-style table of the keys of `values`, defining their display order.        |
-| `get`         | `function\|methodname` | Getter function.                                                                         |
-| `set`         | `function\|methodname` | Setter function.                                                                         |
-| `style`       | `string`               | `"dropdown"` or `"radio"` (optional support in implementations).                         |
-| `itemControl` | `string`               | Name of a custom AceGUI item widget to use for the dropdown entries (dialog UI only).    |
+| Field         | Type                    | Description                                                                              |
+|---------------|-------------------------|------------------------------------------------------------------------------------------|
+| `values`      | `table` `function`      | `[key]=value` pair table; the key is passed to `set`, the value is the string displayed. |
+| `sorting`     | `table` `function`      | Optional array-style table of the keys of `values`, defining their display order.        |
+| `get`         | `function` `methodname` | Getter function.                                                                         |
+| `set`         | `function` `methodname` | Setter function.                                                                         |
+| `style`       | `string`                | `"dropdown"` or `"radio"` (optional support in implementations).                         |
+| `itemControl` | `string`                | Name of a custom AceGUI item widget to use for the dropdown entries (dialog UI only).    |
 
 ### multiselect
 
 Multiple `toggle` elements condensed into a group of checkboxes (or something else that makes sense in the interface).
 
-| Field      | Type                   | Description                                                                                                               |
-|------------|------------------------|---------------------------------------------------------------------------------------------------------------------------|
-| `values`   | `table\|function`      | `[key]=value` pair table; the key is passed to `set`, the value is the string displayed.                                  |
-| `get`      | `function\|methodname` | Called for every key in `values`, with the key name as the last parameter.                                                |
-| `set`      | `function\|methodname` | Called with `keyname, state` as parameters.                                                                               |
-| `style`    | `string`               | Optional UI style hint.                                                                                                   |
-| `tristate` | `boolean`              | Make the checkmarks tri-state. Values cycle through unchecked (`false`), checked (`true`), greyed (`nil`), in that order. |
+| Field      | Type                    | Description                                                                                                               |
+|------------|-------------------------|---------------------------------------------------------------------------------------------------------------------------|
+| `values`   | `table` `function`      | `[key]=value` pair table; the key is passed to `set`, the value is the string displayed.                                  |
+| `get`      | `function` `methodname` | Called for every key in `values`, with the key name as the last parameter.                                                |
+| `set`      | `function` `methodname` | Called with `keyname, state` as parameters.                                                                               |
+| `style`    | `string`                | Optional UI style hint.                                                                                                   |
+| `tristate` | `boolean`               | Make the checkmarks tri-state. Values cycle through unchecked (`false`), checked (`true`), greyed (`nil`), in that order. |
 
 Unlike most types, `get` and `set` operate **per key**: AceConfig calls `get` once for every key in `values` (passing
 that key), and calls `set` with the key and its new state.
@@ -221,11 +221,11 @@ track = {
 
 Opens a color picker (in a GUI, possibly via a button).
 
-| Field      | Type                            | Description                                        |
-|------------|---------------------------------|----------------------------------------------------|
-| `get`      | `function\|methodname`          | Getter function.                                   |
-| `set`      | `function\|methodname`          | Setter function.                                   |
-| `hasAlpha` | `boolean\|methodname\|function` | Indicate if alpha is adjustable (default `false`). |
+| Field      | Type                              | Description                                        |
+|------------|-----------------------------------|----------------------------------------------------|
+| `get`      | `function` `methodname`           | Getter function.                                   |
+| `set`      | `function` `methodname`           | Setter function.                                   |
+| `hasAlpha` | `boolean` `methodname` `function` | Indicate if alpha is adjustable (default `false`). |
 
 Getter/setter functions use 4 arguments/returns: `r, g, b, a`. If `hasAlpha` is `false`/`nil`, alpha is always set as
 `1.0`.
@@ -250,10 +250,10 @@ barColor = {
 
 ### keybinding
 
-| Field | Type                   | Description      |
-|-------|------------------------|------------------|
-| `get` | `function\|methodname` | Getter function. |
-| `set` | `function\|methodname` | Setter function. |
+| Field | Type                    | Description      |
+|-------|-------------------------|------------------|
+| `get` | `function` `methodname` | Getter function. |
+| `set` | `function` `methodname` | Setter function. |
 
 ### header
 
@@ -268,14 +268,14 @@ layout.
 
 A paragraph of text appearing alongside other options, optionally with an image in front of it.
 
-| Field         | Type                          | Description                                                                                                                                            |
-|---------------|-------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `name`        | `string`                      | The text to display.                                                                                                                                   |
-| `fontSize`    | `string\|function`            | Size of the text: `"large"`, `"medium"`, or `"small"` (default `"small"`).                                                                             |
-| `image`       | `string\|number\|function`    | Path to image texture; if a function, it may optionally return width and height as the 2nd and 3rd values, used instead of `imageWidth`/`imageHeight`. |
-| `imageCoords` | `table\|methodname\|function` | Arguments to pass to `SetTexCoord`, e.g. `{0.1, 0.9, 0.1, 0.9}`.                                                                                       |
-| `imageWidth`  | `number`                      | Width of the displayed image.                                                                                                                          |
-| `imageHeight` | `number`                      | Height of the displayed image.                                                                                                                         |
+| Field         | Type                            | Description                                                                                                                                            |
+|---------------|---------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `name`        | `string`                        | The text to display.                                                                                                                                   |
+| `fontSize`    | `string` `function`             | Size of the text: `"large"`, `"medium"` or `"small"` (default `"small"`).                                                                              |
+| `image`       | `string` `number` `function`    | Path to image texture; if a function, it may optionally return width and height as the 2nd and 3rd values, used instead of `imageWidth`/`imageHeight`. |
+| `imageCoords` | `table` `methodname` `function` | Arguments to pass to [`SetTexCoord`](https://warcraft.wiki.gg/wiki/API_Texture_SetTexCoord), e.g. `{0.1, 0.9, 0.1, 0.9}`.                              |
+| `imageWidth`  | `number`                        | Width of the displayed image.                                                                                                                          |
+| `imageHeight` | `number`                        | Height of the displayed image.                                                                                                                         |
 
 ### group
 
