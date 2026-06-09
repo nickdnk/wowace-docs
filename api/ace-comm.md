@@ -1,21 +1,21 @@
 ---
-description: "AceComm-3.0 sends addon-channel messages of unlimited length, splitting and reassembling them automatically and using ChatThrottleLib to avoid disconnects"
+description: "AceComm-3.0 sends addon-channel messages of any length, splitting and reassembling them automatically, with ChatThrottleLib bundled to prevent server disconnects"
 ---
 
 # AceComm-3.0
 
 <Embeddable />
 
-AceComm-3.0 allows you to send messages of unlimited length over the addon communication channels.
-It automatically splits the messages into multiple parts and rebuilds them on the receiving end.
-`ChatThrottleLib` is of course being used to avoid being disconnected by the server.
+AceComm-3.0 sends addon-channel messages of any length, splitting and reassembling them automatically. All sends are
+routed through the bundled [`ChatThrottleLib`](https://wowpedia.fandom.com/wiki/ChatThrottleLib) to prevent server
+disconnects.
 
 ## Usage
 
 ### Sending messages to other clients
 
-Send data with [`:SendCommMessage`](#sendcommmessage): give it a `prefix` tag, the `text` to send (any length; it's
-split and reassembled for you), and a `distribution` channel:
+Send data with [`:SendCommMessage`](#sendcommmessage). Provide a `prefix` tag, the `text` to send, and a `distribution`
+channel:
 
 ```lua
 MyAddon:SendCommMessage("MyPrefix", "the data to send", "RAID")
@@ -41,8 +41,6 @@ function MyAddon:OnCommReceived(prefix, message, distribution, sender)
 end
 ```
 
-The handler receives `prefix`, `message`, `distribution`, and `sender`.
-
 ## API Reference
 
 ````apimethod
@@ -58,10 +56,10 @@ Copies AceComm's methods onto `target` so you can call them on it directly. See 
 name: AceComm:RegisterComm
 returns: { type = "table", desc = "The registration object returned by [CallbackHandler](/api/callback-handler) (used internally to track the callback)." }
 params:
-  - { name = "prefix", type = "string", desc = "A printable character (\\032-\\255) classification of the message (typically AddonName or AddonNameEvent), max 16 characters. Registering a prefix longer than 16 characters raises an error." }
-  - { name = "method", type = "function|string", default = "\"OnCommReceived\"", desc = "Callback to call on message reception: function reference, or method name to call on self. The callback receives prefix, message, distribution, and sender." }
+  - { name = "prefix", type = "string", desc = "A string of printable characters (\\032–\\255) identifying the message type, typically the addon or event name. Max 16 characters." }
+  - { name = "method", type = "function|string", default = "\"OnCommReceived\"", desc = "Callback to call on message reception: function reference, or method name to call on `self`. The callback receives `prefix`, `message`, `distribution` and `sender`." }
 ---
-Register for Addon Traffic on a specified prefix. The prefix is also registered with the client's addon-message prefix system (`C_ChatInfo.RegisterAddonMessagePrefix`) so the game will deliver [`CHAT_MSG_ADDON`](https://warcraft.wiki.gg/wiki/CHAT_MSG_ADDON) events for it. Multipart messages are automatically reassembled before the callback fires.
+Register for addon messages on the given prefix. The prefix is also registered via [`C_ChatInfo.RegisterAddonMessagePrefix`](https://warcraft.wiki.gg/wiki/API_C_ChatInfo.RegisterAddonMessagePrefix) so the game delivers [`CHAT_MSG_ADDON`](https://warcraft.wiki.gg/wiki/CHAT_MSG_ADDON) events for it. Multipart messages are reassembled before the callback fires.
 
 ---
 
@@ -77,17 +75,17 @@ end
 ````apimethod
 name: AceComm:SendCommMessage
 params:
-  - { name = "prefix", type = "string", desc = "A printable character (\\032-\\255) classification of the message (typically AddonName or AddonNameEvent)." }
-  - { name = "text", type = "string", desc = "Data to send, nils (\\000) not allowed. Any length." }
-  - { name = "distribution", type = "string", desc = "Addon channel, e.g. \"RAID\", \"GUILD\", etc; see SendAddonMessage API." }
-  - { name = "target", type = "string|number", optional = true, desc = "Destination for some distributions (e.g. the recipient name for \"WHISPER\"); see SendAddonMessage API." }
-  - { name = "prio", type = "string", default = "\"NORMAL\"", desc = "ChatThrottleLib priority, \"BULK\", \"NORMAL\" or \"ALERT\". The same priority is used for every chunk of a multipart message to guarantee in-order delivery." }
+  - { name = "prefix", type = "string", desc = "A string of printable characters (\\032–\\255) identifying the message type, typically the addon or event name." }
+  - { name = "text", type = "string", desc = "Text to send. NUL bytes (\\000) are not allowed." }
+  - { name = "distribution", type = "string", desc = "Addon channel, e.g. `\"RAID\"`, `\"GUILD\"`, etc; see [`C_ChatInfo.SendAddonMessage`](https://warcraft.wiki.gg/wiki/API_C_ChatInfo.SendAddonMessage) API." }
+  - { name = "target", type = "string|number", optional = true, desc = "Destination for some distributions (e.g. the recipient name for `\"WHISPER\"`)." }
+  - { name = "prio", type = "string", default = "\"NORMAL\"", desc = "ChatThrottleLib priority, `\"BULK\"`, `\"NORMAL\"` or `\"ALERT\"`. The same priority is used for every chunk of a multipart message to guarantee in-order delivery." }
   - { name = "callbackFn", type = "function", optional = true, desc = "Callback function called as each chunk is sent. Receives 3 args: the user-supplied arg (see next), the number of bytes sent so far, and the number of bytes total to send." }
-  - { name = "callbackArg", type = "any", optional = true, desc = "First arg to the callback function. Nil will be passed if not specified." }
+  - { name = "callbackArg", type = "any", optional = true, desc = "First arg to the callback function. `nil` if not specified." }
 ---
-Send a message over the Addon Channel.
+Send a message over an addon channel.
 
-Text of any length is supported: messages up to 255 bytes are sent in a single addon message, while longer text is automatically split into chunks (each tagged so the receiving side can reassemble it in order). A leading control character (`\001`-`\009`) in the text is transparently escaped. All sends go through `ChatThrottleLib` using the given priority to avoid being disconnected by the server. `prefix`, `text`, and `distribution` are required; passing arguments of the wrong type (or an invalid `prio`) raises a usage error.
+Messages up to 255 bytes are sent as a single addon message; longer text is split into tagged chunks and reassembled on the receiving end. A leading control byte (`\001`–`\009`) in the text is transparently escaped. `prefix`, `text`, and `distribution` are required; wrong types or an invalid `prio` raise a usage error.
 ````
 
 ````apimethod

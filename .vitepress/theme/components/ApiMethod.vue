@@ -1,12 +1,35 @@
 <script setup>
-defineProps({
+import { ref, onMounted, onUnmounted } from 'vue'
+
+const props = defineProps({
   kind: { type: String, default: 'method' }, // 'method' | 'callback'
   anchor: { type: String, default: '' },     // slug of the (hidden) heading
+})
+
+const card = ref(null)
+const flashing = ref(false)
+
+function flash() {
+  flashing.value = false
+  flashing.value = true
+}
+
+function checkHash() {
+  if (props.anchor && window.location.hash === '#' + props.anchor) flash()
+}
+
+onMounted(() => {
+  checkHash()
+  window.addEventListener('hashchange', checkHash)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('hashchange', checkHash)
 })
 </script>
 
 <template>
-  <div class="api-method">
+  <div class="api-method" :class="{ 'is-targeted': flashing }" :data-anchor="anchor || undefined" ref="card" @animationend="flashing = false">
     <div class="api-method__top">
       <span class="api-method__badge" :class="kind">{{ kind }}</span>
       <a
@@ -22,12 +45,20 @@ defineProps({
 </template>
 
 <style scoped>
+@keyframes card-flash {
+  0%   { border-color: var(--vp-c-brand-1); box-shadow: 0 0 0 2px color-mix(in srgb, var(--vp-c-brand-1) 15%, transparent); }
+  60%  { border-color: var(--vp-c-brand-1); box-shadow: 0 0 0 2px color-mix(in srgb, var(--vp-c-brand-1) 15%, transparent); }
+  100% { border-color: var(--vp-c-divider); box-shadow: none; }
+}
 .api-method {
   border: 1px solid var(--vp-c-divider);
   border-radius: 10px;
   padding: 14px 18px 16px;
   margin: 14px 0 26px;
   background: var(--vp-c-bg-soft);
+}
+.api-method.is-targeted {
+  animation: card-flash 1.2s ease-out forwards;
 }
 .api-method__top {
   display: flex;
@@ -45,7 +76,7 @@ defineProps({
   color: var(--vp-c-bg);
   background: var(--vp-c-brand-1);
 }
-.api-method__badge.callback { background: #8b5cf6; }
+.api-method__badge.callback { background: var(--vp-badge-callback-color, #8b5cf6); }
 .api-method__anchor {
   color: var(--vp-c-brand-1);
   font-weight: 700;

@@ -21,6 +21,7 @@
   --vp-button-brand-hover-text: #ffffff;
   --vp-button-brand-active-text: #ffffff;
   --vp-button-brand-border: transparent;
+  --vp-badge-callback-color: #8b5cf6;
 }
 
 /* LIGHT MODE ONLY. Scoped to `:not(.dark)` so these light surfaces don't leak
