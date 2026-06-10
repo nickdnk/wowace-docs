@@ -101,7 +101,7 @@ Runs `func`. In a GUI this is a button; if `image` is set, it displays a clickab
 
 | Field         | Type                            | Description                                                                                                                                                      |
 |---------------|---------------------------------|------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `func`        | `function` `methodname`         | Function to execute.                                                                                                                                             |
+| `func`        | `function` `methodname`         | Called as `func(info)` when executed.                                                                                                                            |
 | `image`       | `string` `number` `function`    | Path to image texture; if a function, it may optionally return the image width and height as the 2nd and 3rd values, used instead of `imageWidth`/`imageHeight`. |
 | `imageCoords` | `table` `methodname` `function` | Arguments to pass to [`SetTexCoord`](https://warcraft.wiki.gg/wiki/API_Texture_SetTexCoord), e.g. `{0.1, 0.9, 0.1, 0.9}`.                                        |
 | `imageWidth`  | `number`                        | Width of the displayed image.                                                                                                                                    |
@@ -113,8 +113,8 @@ A simple text input, with an optional validation pattern or function.
 
 | Field       | Type                    | Description                                                                                    |
 |-------------|-------------------------|------------------------------------------------------------------------------------------------|
-| `get`       | `function` `methodname` | Getter function.                                                                               |
-| `set`       | `function` `methodname` | Setter function.                                                                               |
+| `get`       | `function` `methodname` | Called as `get(info)` → current string value.                                                  |
+| `set`       | `function` `methodname` | Called as `set(info, value)` — `value` is the new string.                                      |
 | `multiline` | `boolean` `integer`     | If `true`, shown as a multiline editbox in dialog implementations (integer = number of lines). |
 | `pattern`   | `string`                | Optional validation pattern. (Use `validate` for more advanced checks.)                        |
 | `usage`     | `string`                | Usage string, displayed if the pattern mismatches and in console help messages.                |
@@ -145,8 +145,8 @@ A simple checkbox.
 
 | Field         | Type                            | Description                                                                                                                           |
 |---------------|---------------------------------|---------------------------------------------------------------------------------------------------------------------------------------|
-| `get`         | `function` `methodname`         | Getter function.                                                                                                                      |
-| `set`         | `function` `methodname`         | Setter function.                                                                                                                      |
+| `get`         | `function` `methodname`         | Called as `get(info)` → `true`, `false`, or `nil`.                                                                                    |
+| `set`         | `function` `methodname`         | Called as `set(info, value)` — `value` is `true`, `false`, or `nil`.                                                                  |
 | `tristate`    | `boolean`                       | Make it a tri-state checkbox. Values cycle through unchecked (`false`), checked (`true`), greyed (`nil`), in that order.              |
 | `image`       | `string` `number` `function`    | Optional image texture displayed next to the checkbox in a dialog UI.                                                                 |
 | `imageCoords` | `table` `methodname` `function` | Arguments to pass to [`SetTexCoord`](https://warcraft.wiki.gg/wiki/API_Texture_SetTexCoord) for `image`, e.g. `{0.1, 0.9, 0.1, 0.9}`. |
@@ -163,8 +163,8 @@ Configures a numeric value in a specific range. In a GUI, a slider.
 | `softMax`   | `number`                | "Soft" maximum, used by the UI as a convenient limit while still allowing manual input up to `min`/`max`. |
 | `step`      | `number`                | Step value used to validate numeric input (default = no stepping limit).                                  |
 | `bigStep`   | `number`                | A more generally-useful step size. Support in UIs is optional.                                            |
-| `get`       | `function` `methodname` | Getter function.                                                                                          |
-| `set`       | `function` `methodname` | Setter function.                                                                                          |
+| `get`       | `function` `methodname` | Called as `get(info)` → current number.                                                                   |
+| `set`       | `function` `methodname` | Called as `set(info, value)` — `value` is the new number.                                                 |
 | `isPercent` | `boolean`               | Represent e.g. `1.0` as `100%` (default `false`).                                                         |
 
 ::: warning Note
@@ -181,8 +181,8 @@ Only one value can be selected. In a dropdown UI this is likely a radio group; i
 |---------------|-------------------------|------------------------------------------------------------------------------------------|
 | `values`      | `table` `function`      | `[key]=value` pair table; the key is passed to `set`, the value is the string displayed. |
 | `sorting`     | `table` `function`      | Optional array-style table of the keys of `values`, defining their display order.        |
-| `get`         | `function` `methodname` | Getter function.                                                                         |
-| `set`         | `function` `methodname` | Setter function.                                                                         |
+| `get`         | `function` `methodname` | Called as `get(info)` → the active key from `values`.                                    |
+| `set`         | `function` `methodname` | Called as `set(info, key)` — `key` is the selected entry from `values`.                  |
 | `style`       | `string`                | `"dropdown"` or `"radio"` (optional support in implementations).                         |
 | `itemControl` | `string`                | Name of a custom AceGUI item widget to use for the dropdown entries (dialog UI only).    |
 
@@ -193,8 +193,8 @@ Multiple `toggle` elements condensed into a group of checkboxes (or something el
 | Field      | Type                    | Description                                                                                                               |
 |------------|-------------------------|---------------------------------------------------------------------------------------------------------------------------|
 | `values`   | `table` `function`      | `[key]=value` pair table; the key is passed to `set`, the value is the string displayed.                                  |
-| `get`      | `function` `methodname` | Called for every key in `values`, with the key name as the last parameter.                                                |
-| `set`      | `function` `methodname` | Called with `keyname, state` as parameters.                                                                               |
+| `get`      | `function` `methodname` | Called as `get(info, key)` once per key in `values` → `true` or `false`.                                                  |
+| `set`      | `function` `methodname` | Called as `set(info, key, value)` — `key` is the entry toggled, `value` is the new state.                                 |
 | `style`    | `string`                | Optional UI style hint.                                                                                                   |
 | `tristate` | `boolean`               | Make the checkmarks tri-state. Values cycle through unchecked (`false`), checked (`true`), greyed (`nil`), in that order. |
 
@@ -223,8 +223,8 @@ Opens a color picker (in a GUI, possibly via a button).
 
 | Field      | Type                              | Description                                        |
 |------------|-----------------------------------|----------------------------------------------------|
-| `get`      | `function` `methodname`           | Getter function.                                   |
-| `set`      | `function` `methodname`           | Setter function.                                   |
+| `get`      | `function` `methodname`           | Called as `get(info)` → `r, g, b[, a]` (each 0–1). |
+| `set`      | `function` `methodname`           | Called as `set(info, r, g, b[, a])` — each 0–1.    |
 | `hasAlpha` | `boolean` `methodname` `function` | Indicate if alpha is adjustable (default `false`). |
 
 Getter/setter functions use 4 arguments/returns: `r, g, b, a`. If `hasAlpha` is `false`/`nil`, alpha is always set as
@@ -250,10 +250,10 @@ barColor = {
 
 ### keybinding
 
-| Field | Type                    | Description      |
-|-------|-------------------------|------------------|
-| `get` | `function` `methodname` | Getter function. |
-| `set` | `function` `methodname` | Setter function. |
+| Field | Type                    | Description                                                   |
+|-------|-------------------------|---------------------------------------------------------------|
+| `get` | `function` `methodname` | Called as `get(info)` → current keybind string.               |
+| `set` | `function` `methodname` | Called as `set(info, key)` — `key` is the new binding string. |
 
 ### header
 
