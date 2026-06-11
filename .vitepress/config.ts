@@ -1,5 +1,5 @@
 import { defineConfig } from 'vitepress'
-import { writeFileSync } from 'node:fs'
+import { writeFileSync, readFileSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 import { groupIconMdPlugin, groupIconVitePlugin } from 'vitepress-plugin-group-icons'
 
@@ -293,6 +293,8 @@ export default defineConfig({
       '',
       '> Documentation for the Ace3 World of Warcraft addon framework: a suite of embeddable Lua libraries for addon structure, saved variables, configuration, events, timers, communication, serialization, localization, and GUI.',
       '',
+      `> Full content (all pages concatenated): ${SITE_URL}/llms-full.txt`,
+      '',
     ]
     const collect = (items: any[], out: string[]) => {
       for (const it of items || []) {
@@ -308,6 +310,31 @@ export default defineConfig({
       if (out.length) lines.push(`## ${group.text}`, '', ...out, '')
     }
     writeFileSync(join(siteConfig.outDir, 'llms.txt'), lines.join('\n'))
+
+    // Emit /llms-full.txt: full markdown content of every page for AI tools
+    // that can consume a single-file reference instead of crawling.
+    const fullLines: string[] = [
+      '# Ace3 Documentation — Full Reference',
+      '',
+      '> Documentation for the Ace3 World of Warcraft addon framework: a suite of embeddable Lua libraries for addon structure, saved variables, configuration, events, timers, communication, serialization, localization, and GUI.',
+      '',
+    ]
+    const addPage = (link: string, title: string) => {
+      const file = join(siteConfig.srcDir, link.replace(/^\//, '') + '.md')
+      if (!existsSync(file)) return
+      const content = readFileSync(file, 'utf-8').replace(/^---[\s\S]*?---\n*/, '').trim()
+      fullLines.push('---', `# ${title}`, `URL: ${SITE_URL}${link}`, '', content, '')
+    }
+    addPage('/getting-started', 'Getting Started')
+    addPage('/common-tasks', 'Common Tasks')
+    const collectFull = (items: any[]) => {
+      for (const it of items || []) {
+        if (typeof it.link === 'string' && it.link.startsWith('/')) addPage(it.link, it.text)
+        if (it.items) collectFull(it.items)
+      }
+    }
+    for (const group of sidebar) collectFull(group.items)
+    writeFileSync(join(siteConfig.outDir, 'llms-full.txt'), fullLines.join('\n'))
   },
 
   markdown: {

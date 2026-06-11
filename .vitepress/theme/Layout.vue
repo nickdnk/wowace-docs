@@ -11,7 +11,11 @@ let hashNavAt = 0
 function updateHash() {
   if (Date.now() - hashNavAt < 1000) return
   const active = document.querySelector<HTMLAnchorElement>('.outline-link.active')
-  if (!active?.hash || active.hash === location.hash) return
+  if (!active?.hash) {
+    if (location.hash) history.replaceState(null, '', location.pathname)
+    return
+  }
+  if (active.hash === location.hash) return
   history.replaceState(null, '', active.hash)
 }
 

@@ -6,7 +6,8 @@ description: "AceGUI-3.0 is a pooled widget toolkit for building World of Warcra
 
 AceGUI-3.0 provides access to numerous widgets which can be used to create GUIs.
 
-AceGUI is used by `AceConfigDialog` to create the option GUIs, but you can use it by itself to create any custom GUI.
+AceGUI is used by [`AceConfigDialog`](/api/ace-config-dialog) to create the option GUIs, but you can use it by itself to
+create any custom GUI.
 
 ::: warning
 When using AceGUI-3.0 directly, **do not modify the underlying frames of the widgets**. Any "unknown" change to a widget

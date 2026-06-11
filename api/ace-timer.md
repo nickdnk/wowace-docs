@@ -87,9 +87,7 @@ returns: { type = "boolean", desc = "`true` if the timer was successfully cancel
 params:
   - { name = "id", type = "string", desc = "The id of the timer, as returned by [`:ScheduleTimer`](#scheduletimer) or [`:ScheduleRepeatingTimer`](#schedulerepeatingtimer)." }
 ---
-Cancels a timer with the given id, registered by the same addon object as used for [`:ScheduleTimer`](#scheduletimer).
-
-Both one-shot and repeating timers can be canceled with this function, as long as the `id` is valid and the timer has not fired yet or was canceled before.
+Cancels a timer registered by the same addon object as used for [`:ScheduleTimer`](#scheduletimer). Both one-shot and repeating timers can be canceled.
 
 ---
 

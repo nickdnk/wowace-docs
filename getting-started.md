@@ -7,6 +7,10 @@ description: "Build your first World of Warcraft addon on Ace3: set up the folde
 New to World of Warcraft addons? You're in the right place. This guide takes you from an empty folder to a working addon
 built on **Ace3**, and explains the pieces as it goes.
 
+::: tip Using an AI assistant?
+Load [`/llms-full.txt`](/llms-full.txt) into your AI's context for the complete Ace3 reference in one file.
+:::
+
 ## What is Ace3, and why use it?
 
 Ace3 is the most widely used **addon framework** for World of Warcraft: a set of small, focused libraries that handle
@@ -197,6 +201,7 @@ MyAddon/
 ## Author: Your Name
 ## Version: 1.0
 ## SavedVariables: MyAddonDB
+## IconTexture: Interface\Icons\TEMP
 
 embeds.xml
 Core.lua
@@ -285,8 +290,7 @@ opens the window.
 
 ## The Ace3 libraries
 
-Each library is independent; embed only what you need. Every page has a **Usage** guide (purpose + examples) followed by
-its full API reference.
+Each library is independent; embed only what you need.
 
 **Addon Structure**
 

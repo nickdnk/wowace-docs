@@ -8,7 +8,7 @@ description: "Ace3 is a modular World of Warcraft addon framework: embed only th
 hero:
   name: "Ace3"
   text: "World of Warcraft Addon Framework"
-  tagline: A modular suite of libraries for building World of Warcraft addons. Pick the components you need.
+  tagline: A modular suite of libraries for building World of Warcraft addons.
   actions:
     - theme: brand
       text: Getting Started

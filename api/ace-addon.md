@@ -4,9 +4,10 @@ description: "AceAddon-3.0 provides a template for creating addon objects, with 
 
 # AceAddon-3.0
 
-AceAddon-3.0 provides a template for creating addon objects. It gives you a set of lifecycle callbacks
-([`OnInitialize`](#oninitialize), [`OnEnable`](#onenable), [`OnDisable`](#ondisable)) that simplify the loading process
-of your addon; see [Callbacks](#callbacks).
+AceAddon-3.0 is the conventional foundation of an Ace3 addon. It creates your addon object, provides lifecycle
+callbacks ([`OnInitialize`](#oninitialize), [`OnEnable`](#onenable), [`OnDisable`](#ondisable)) that fire at the right
+points during loading, and is where you declare which [other Ace3 libraries](/getting-started#the-ace3-libraries)
+to [embed as mixins](#mixins-vs-on-demand-libraries).
 
 ## Usage
 
@@ -112,8 +113,7 @@ name: MyAddon:Disable
 kind: method
 returns: { type = "boolean", desc = "`true` or `false` depending on whether the addon was successfully disabled." }
 ---
-Disables the addon if possible. Returns `true` or `false` depending on whether it succeeded.
-This internally calls `AceAddon:DisableAddon()`, thus dispatching a [`OnDisable`](#ondisable) callback and disabling all modules of the addon.
+Disables the addon if possible. This internally calls `AceAddon:DisableAddon()`, thus dispatching a [`OnDisable`](#ondisable) callback and disabling all modules of the addon.
 `:Disable()` also sets the internal `enabledState` variable to false.
 
 ---
@@ -132,8 +132,7 @@ params:
   - { name = "name", type = "string", desc = "Unique name of the module to disable." }
 returns: { type = "boolean", desc = "`true` or `false` depending on whether the module was successfully disabled." }
 ---
-Disables the module if possible. Returns `true` or `false` depending on whether it succeeded.
-Short-hand function that retrieves the module via [`:GetModule`](#getmodule) and calls [`:Disable`](#disable) on the module object.
+Disables the module if possible. Short-hand function that retrieves the module via [`:GetModule`](#getmodule) and calls [`:Disable`](#disable) on the module object.
 
 ---
 
@@ -154,8 +153,7 @@ name: MyAddon:Enable
 kind: method
 returns: { type = "boolean", desc = "`true` or `false` depending on whether the addon was successfully enabled (`nil` if enabling was deferred because the addon is still queued for initialization)." }
 ---
-Enables the addon if possible. Returns `true` or `false` depending on whether it succeeded.
-This internally calls `AceAddon:EnableAddon()`, thus dispatching a [`OnEnable`](#onenable) callback and enabling all modules of the addon (unless explicitly disabled).
+Enables the addon if possible. This internally calls `AceAddon:EnableAddon()`, thus dispatching a [`OnEnable`](#onenable) callback and enabling all modules of the addon (unless explicitly disabled).
 `:Enable()` also sets the internal `enabledState` variable to true. If the addon is still queued for initialization, enabling is deferred until after the init process completes.
 
 ---
@@ -175,8 +173,7 @@ params:
   - { name = "name", type = "string", desc = "Unique name of the module to enable." }
 returns: { type = "boolean", desc = "`true` or `false` depending on whether the module was successfully enabled." }
 ---
-Enables the module if possible. Returns `true` or `false` depending on whether it succeeded.
-Short-hand function that retrieves the module via [`:GetModule`](#getmodule) and calls [`:Enable`](#enable) on the module object.
+Enables the module if possible. Short-hand function that retrieves the module via [`:GetModule`](#getmodule) and calls [`:Enable`](#enable) on the module object.
 
 ---
 
@@ -457,9 +454,7 @@ MyAddon = LibStub("AceAddon-3.0"):NewAddon(MyFrame, "MyAddon", "AceEvent-3.0")
 
 ## Callbacks
 
-AceAddon calls these lifecycle methods on your addon (and module) objects if you define them. They aren't fired through
-CallbackHandler; you simply declare them as methods on the object returned by
-[`:NewAddon`](#newaddon)/[`:NewModule`](#newmodule).
+AceAddon calls these lifecycle methods automatically if you define them — no registration required.
 
 ````apimethod
 name: MyAddon:OnInitialize
